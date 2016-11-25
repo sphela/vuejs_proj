@@ -1,0 +1,9 @@
+{
+  "name": "sphela",
+  "version": "1.0.0",
+  "description": "wiki",
+  "main": "index.js",
+  "repository": "git@github.com:btipling/sphela.git",
+  "author": "Bjorn Tipling <bjorn@ambientchill.com>",
+  "license": "Apache License 2.0"
+}
