@@ -9,12 +9,16 @@
   "devDependencies": {
     "ava": "^0.17.0",
     "eslint": "^3.10.2",
+    "eslint-plugin-flowtype": "^2.25.0",
     "flow-bin": "^0.36.0",
+    "flow-typed": "^2.0.0",
+    "flowtype": "^2.0.0",
     "gulp": "^3.9.1",
     "gulp-rollup": "^2.5.1",
     "gulp-stylus": "^2.6.0",
     "rollup": "^0.36.4",
     "rollup-plugin-babel": "^2.6.1",
+    "rollup-plugin-flow": "^1.0.1",
     "rollup-plugin-vue": "^2.2.8",
     "stylus": "^0.54.5"
   },
