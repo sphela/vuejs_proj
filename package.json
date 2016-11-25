@@ -2,7 +2,7 @@
   "name": "sphela",
   "version": "1.0.0",
   "description": "It's a wiki!",
-  "main": "index.js",
+  "main": "./dist/server/main.js",
   "repository": "git@github.com:btipling/sphela.git",
   "author": "Bjorn Tipling <bjorn@ambientchill.com>",
   "license": "Apache License 2.0",
