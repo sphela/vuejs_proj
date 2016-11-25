@@ -1,9 +1,27 @@
 {
   "name": "sphela",
   "version": "1.0.0",
-  "description": "wiki",
+  "description": "It's a wiki!",
   "main": "index.js",
   "repository": "git@github.com:btipling/sphela.git",
   "author": "Bjorn Tipling <bjorn@ambientchill.com>",
-  "license": "Apache License 2.0"
+  "license": "Apache License 2.0",
+  "devDependencies": {
+    "ava": "^0.17.0",
+    "eslint": "^3.10.2",
+    "flow-bin": "^0.36.0",
+    "gulp": "^3.9.1",
+    "gulp-rollup": "^2.5.1",
+    "gulp-stylus": "^2.6.0",
+    "rollup": "^0.36.4",
+    "rollup-plugin-babel": "^2.6.1",
+    "rollup-plugin-vue": "^2.2.8",
+    "stylus": "^0.54.5"
+  },
+  "dependencies": {
+    "express": "^4.14.0",
+    "rxjs": "^5.0.0-rc.4",
+    "vue": "^2.1.3",
+    "vuex": "^2.0.0"
+  }
 }
