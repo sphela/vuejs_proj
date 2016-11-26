@@ -5,7 +5,7 @@ const express = require('express');
 import Server from './server';
 
 import {
-  SERVER_PORT
+  SERVER_PORT,
 } from '../shared/config';
 
 function main () {

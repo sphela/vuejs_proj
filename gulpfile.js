@@ -8,6 +8,7 @@ const nodemon = require('gulp-nodemon');
 
 const paths = {
   js: {
+    gulpfile: './gulpfile.js',
     src: './src/js/**/*.js',
     dest: './dist/js/',
     client: {
@@ -53,7 +54,7 @@ gulp.task(tasks.FLOW, cb => {
 });
 
 gulp.task(tasks.LINT, () => {
-  return gulp.src(paths.js.src)
+  return gulp.src([ paths.js.src, paths.js.gulpfile ])
     .pipe(eslint())
     .pipe(eslint.format())
     .pipe(eslint.failAfterError());
@@ -98,16 +99,14 @@ const WATCH_TASKS = [
   tasks.NODEMON,
 ];
 
-
-gulp.task(tasks.NODEMON,() => {
-    return nodemon({
-      script: paths.js.server.target,
-      watch: './src/',
-      tasks: ALL_TASKS,
-      env: { 'NODE_ENV': 'development' },
-    });
-  }
-);
+gulp.task(tasks.NODEMON, () => {
+  return nodemon({
+    script: paths.js.server.target,
+    watch: './src/',
+    tasks: ALL_TASKS,
+    env: { 'NODE_ENV': 'development' },
+  });
+});
 
 gulp.task(tasks.WATCH, gulp.series(WATCH_TASKS));
 
