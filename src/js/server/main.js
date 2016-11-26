@@ -9,7 +9,7 @@ import {
 } from '../shared/config';
 
 function main () {
-  const server = new Server(express(), SERVER_PORT);
+  const server = new Server(express(), SERVER_PORT, []);
   server.listen();
   server.get('*').subscribe(({ req, res }) => {
     res.status(200).send('Hello World!');

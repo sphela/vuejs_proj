@@ -6,7 +6,7 @@ import type { $Request, $Response } from 'express';
 
 export interface Server {
   listen(): void;
-  get(path: string): RxObservable;
+  get(path: string): RxObservable<ExpressRx>;
 }
 
 export type ExpressRx = {

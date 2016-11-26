@@ -1,6 +1,6 @@
 // @flow
 'use strict';
 
-export type RxObservable<T> {
-  subscribe
+export interface RxObservable<T> {
+  subscribe(cb: (x: T) => void): void;
 }
