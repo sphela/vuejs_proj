@@ -8,21 +8,23 @@ import type { FS } from '../shared/interfaces/file';
 
 export default class File {
 
-  _files: Object;
+  _contents: ?string;
   _fs: FS;
+  _path: string;
 
-  constructor (fs: FS) {
+  constructor (path: string, fs: FS) {
     this._fs = fs;
-    this._files = {};
+    this._path = path;
+    this._contents = null;
   }
 
-  get (path: string): RxObservable<string> {
-    if (this._files.hasOwnProperty(path)) {
-      return Rx.Observable.of(this._files[path]);
+  get (): RxObservable<string> {
+    if (this._contents !== null) {
+      return Rx.Observable.of(this._contents);
     }
 
     return Rx.Observable.create(observer => {
-      this._fs.readFile(path, (err, data) => {
+      this._fs.readFile(this._path, (err, data) => {
         if (err) {
           observer.error(err);
           return;
@@ -30,7 +32,7 @@ export default class File {
 
         const contents = data.toString('utf8');
 
-        this._files[path] = contents;
+        this._contents = contents;
 
         observer.next(contents);
       });

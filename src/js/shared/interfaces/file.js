@@ -8,5 +8,5 @@ export interface FS {
 }
 
 export interface File {
-  get(path: string): RxObservable<string>;
+  get(): RxObservable<string>;
 }

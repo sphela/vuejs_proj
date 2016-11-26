@@ -76,6 +76,7 @@ gulp.task(tasks.JS_CLIENT, () => {
 gulp.task(tasks.JS_SERVER, () => {
   return gulp.src(paths.js.src)
     .pipe(rollup({
+      sourceMap: true,
       entry: paths.js.server.entry,
       plugins: [
         flow()
