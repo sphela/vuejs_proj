@@ -1,7 +1,7 @@
 // @flow
 'use strict';
 
-const Rx =  require('rxjs');
+const Rx = require('rxjs');
 
 import type { $Application, $Request, $Response } from 'express';
 import type { RxObservable } from '../shared/interfaces/rx';
@@ -19,7 +19,6 @@ export default class Server {
     for (let middleware of middlewares) {
       this._server.use(middleware);
     }
-
   }
 
   listen (): void {

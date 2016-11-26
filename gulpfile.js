@@ -3,22 +3,21 @@ const gulp = require('gulp');
 const rollup = require('gulp-rollup');
 const babel = require('rollup-plugin-babel');
 const flow = require('rollup-plugin-flow');
+const eslint = require('gulp-eslint');
 
 const paths = {
   js: {
+    src: './src/js/**/*.js',
+    dest: './dist/js/',
     client: {
-      src:  './src/js/**/*.js',
-      entry: './src/js/client/main.js',
-      dest: './dist/',
+      entry: './src/js/client/main.js'
     },
     server: {
-      src:  './src/js/**/*.js',
       entry: './src/js/server/main.js',
-      dest: './dist/',
     },
   },
   bin: {
-    flow: './node_modules/flow-bin/cli.js'
+    flow: './node_modules/flow-bin/cli.js',
   }
 };
 
@@ -31,6 +30,7 @@ const tasks = {
   JS_SERVER: 'js_server',
   DEFAULT: 'default',
   FLOW: 'flow',
+  LINT: 'lint',
 };
 
 gulp.task(tasks.FLOW, cb => {
@@ -47,8 +47,15 @@ gulp.task(tasks.FLOW, cb => {
   proc.on('close', cb);
 });
 
+gulp.task(tasks.LINT, () => {
+  return gulp.src(paths.js.src)
+    .pipe(eslint())
+    .pipe(eslint.format())
+    .pipe(eslint.failAfterError());
+});
+
 gulp.task(tasks.JS_CLIENT, function() {
-  return gulp.src(paths.js.client.src)
+  return gulp.src(paths.js.src)
     .pipe(rollup({
       entry: paths.js.client.entry,
       plugins: [
@@ -57,21 +64,22 @@ gulp.task(tasks.JS_CLIENT, function() {
         }),
       ]
     }))
-    .pipe(gulp.dest(paths.js.client.dest));
+    .pipe(gulp.dest(paths.js.dest));
 });
 
 gulp.task(tasks.JS_SERVER, function() {
-  return gulp.src(paths.js.server.src)
+  return gulp.src(paths.js.src)
     .pipe(rollup({
       entry: paths.js.server.entry,
       plugins: [
         flow()
       ],
     }))
-    .pipe(gulp.dest(paths.js.server.dest));
+    .pipe(gulp.dest(paths.js.dest));
 });
 
 const ALL_TASKS = [
+  tasks.LINT,
   tasks.FLOW,
   tasks.JS_CLIENT,
   tasks.JS_SERVER,

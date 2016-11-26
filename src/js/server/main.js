@@ -1,7 +1,7 @@
 // @flow
 'use strict';
 
-const express =  require('express');
+const express = require('express');
 import Server from './server';
 
 import {
