@@ -15,8 +15,12 @@ import {
 } from '../shared/config';
 
 function main () {
-  const server = new Server(express(), SERVER_PORT, [], vueRendererCreator);
+  const middleware = [];
+  middleware.push([ '/static/js', express.static('dist/js/client') ]);
+
+  const server = new Server(express(), SERVER_PORT, middleware, vueRendererCreator);
   server.listen();
+
   const route = new Route(createApp());
   route.serve(server, '*', new File(`${process.cwd()}/src/html/index.html`, fs))
     .subscribe(route.send);

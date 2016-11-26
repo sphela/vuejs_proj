@@ -103,6 +103,7 @@ const WATCH_TASKS = [
 gulp.task(tasks.NODEMON, () => {
   return nodemon({
     script: paths.js.server.target,
+    ext: 'js html',
     watch: './src/',
     tasks: ALL_TASKS,
     env: { 'NODE_ENV': 'development' },

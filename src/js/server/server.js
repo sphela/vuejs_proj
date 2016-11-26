@@ -18,13 +18,13 @@ export default class Server {
   _port: number;
   _renderer: VueServerRenderer;
 
-  constructor (server: $Application, port: number, middlewares: Array<Object>, rendererCreator: VueServerRendererCreator) {
+  constructor (server: $Application, port: number, middleware: Array<Array<any>>, rendererCreator: VueServerRendererCreator) {
     this._server = server;
     this._port = port;
     this._renderer = rendererCreator.createRenderer();
 
-    for (let middleware of middlewares) {
-      this._server.use(middleware);
+    for (let middlewareArgs of middleware) {
+      this._server.use(...middlewareArgs);
     }
   }
 
