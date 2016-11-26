@@ -4,6 +4,7 @@ const rollup = require('gulp-rollup');
 const babel = require('rollup-plugin-babel');
 const flow = require('rollup-plugin-flow');
 const eslint = require('gulp-eslint');
+const nodemon = require('gulp-nodemon');
 
 const paths = {
   js: {
@@ -13,6 +14,7 @@ const paths = {
       entry: './src/js/client/main.js'
     },
     server: {
+      target: './dist/js/server/main.js',
       entry: './src/js/server/main.js',
     },
   },
@@ -23,6 +25,7 @@ const paths = {
 
 const cmds = {
   flow: paths.bin.flow,
+  run: `node ${paths.js.server.target}`,
 };
 
 const tasks = {
@@ -31,6 +34,8 @@ const tasks = {
   DEFAULT: 'default',
   FLOW: 'flow',
   LINT: 'lint',
+  WATCH: 'watch',
+  NODEMON: 'nodemon',
 };
 
 gulp.task(tasks.FLOW, cb => {
@@ -54,7 +59,7 @@ gulp.task(tasks.LINT, () => {
     .pipe(eslint.failAfterError());
 });
 
-gulp.task(tasks.JS_CLIENT, function() {
+gulp.task(tasks.JS_CLIENT, () => {
   return gulp.src(paths.js.src)
     .pipe(rollup({
       entry: paths.js.client.entry,
@@ -67,7 +72,7 @@ gulp.task(tasks.JS_CLIENT, function() {
     .pipe(gulp.dest(paths.js.dest));
 });
 
-gulp.task(tasks.JS_SERVER, function() {
+gulp.task(tasks.JS_SERVER, () => {
   return gulp.src(paths.js.src)
     .pipe(rollup({
       entry: paths.js.server.entry,
@@ -84,5 +89,26 @@ const ALL_TASKS = [
   tasks.JS_CLIENT,
   tasks.JS_SERVER,
 ];
+
+const WATCH_TASKS = [
+  tasks.LINT,
+  tasks.FLOW,
+  tasks.JS_CLIENT,
+  tasks.JS_SERVER,
+  tasks.NODEMON,
+];
+
+
+gulp.task(tasks.NODEMON,() => {
+    return nodemon({
+      script: paths.js.server.target,
+      watch: './src/',
+      tasks: ALL_TASKS,
+      env: { 'NODE_ENV': 'development' },
+    });
+  }
+);
+
+gulp.task(tasks.WATCH, gulp.series(WATCH_TASKS));
 
 gulp.task(tasks.DEFAULT, gulp.parallel(ALL_TASKS));

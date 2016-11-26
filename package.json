@@ -22,6 +22,7 @@
     "flowtype": "^2.0.0",
     "gulp": "gulpjs/gulp#4.0",
     "gulp-eslint": "^3.0.1",
+    "gulp-nodemon": "^2.2.1",
     "gulp-rollup": "^2.5.1",
     "gulp-stylus": "^2.6.0",
     "rollup": "^0.36.4",
