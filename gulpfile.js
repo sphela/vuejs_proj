@@ -91,14 +91,6 @@ gulp.task(tasks.JS_CLIENT, () => {
         filename: 'main.js'
       }
     }))
-    // .pipe(rollup({
-    //   entry: paths.js.client.entry,
-    //   plugins: [
-    //     babel({
-    //       exclude: 'node_modules/**'
-    //     }),
-    //   ]
-    // }))
     .pipe(gulp.dest(`${__dirname}/dist/js/client/`));
 });
 
