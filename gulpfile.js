@@ -1,17 +1,19 @@
 const gulp = require('gulp');
 const rollup = require('gulp-rollup');
+const babel = require('rollup-plugin-babel');
+const flow = require('rollup-plugin-flow');
 
 const paths = {
   js: {
     client: {
-      src:  './src/js/client/**/*.js',
+      src:  './src/js/**/*.js',
       entry: './src/js/client/main.js',
-      dest: './dist/client/',
+      dest: './dist/',
     },
     server: {
-      src:  './src/js/server/**/*.js',
+      src:  './src/js/**/*.js',
       entry: './src/js/server/main.js',
-      dest: './dist/server/',
+      dest: './dist/',
     },
   },
 };
@@ -26,6 +28,11 @@ gulp.task(tasks.JS_CLIENT, function() {
   return gulp.src(paths.js.client.src)
     .pipe(rollup({
       entry: paths.js.client.entry,
+      plugins: [
+        babel({
+          exclude: 'node_modules/**'
+        }),
+      ]
     }))
     .pipe(gulp.dest(paths.js.client.dest));
 });
@@ -34,6 +41,9 @@ gulp.task(tasks.JS_SERVER, function() {
   return gulp.src(paths.js.server.src)
     .pipe(rollup({
       entry: paths.js.server.entry,
+      plugins: [
+        flow()
+      ],
     }))
     .pipe(gulp.dest(paths.js.server.dest));
 });
