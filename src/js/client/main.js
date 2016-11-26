@@ -1,16 +1,11 @@
 // @flow
 'use strict';
 
-class App {
-  run () {
-    console.log('Hello World Client is Running!');
-  }
-
-}
+import { createApp } from '../shared/app';
 
 function main () {
-  const app = new App();
-  app.run();
+  const app = createApp();
+  app.$mount('main');
 }
 
 main();

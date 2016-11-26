@@ -10,5 +10,5 @@ export interface VueServerRenderer {
 }
 
 export interface Vue {
-
+  $mount(query: string): void;
 }

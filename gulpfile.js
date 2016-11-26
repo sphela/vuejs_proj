@@ -1,10 +1,10 @@
 const spawn = require('child_process').spawn;
 const gulp = require('gulp');
 const rollup = require('gulp-rollup');
-const babel = require('rollup-plugin-babel');
 const flow = require('rollup-plugin-flow');
 const eslint = require('gulp-eslint');
 const nodemon = require('gulp-nodemon');
+const webpack = require('gulp-webpack');
 
 const paths = {
   js: {
@@ -61,16 +61,45 @@ gulp.task(tasks.LINT, () => {
 });
 
 gulp.task(tasks.JS_CLIENT, () => {
-  return gulp.src(paths.js.src)
-    .pipe(rollup({
-      entry: paths.js.client.entry,
-      plugins: [
-        babel({
-          exclude: 'node_modules/**'
-        }),
-      ]
+  return gulp.src([
+    './src/js/client/**/*.js',
+    './src/js/shared/**/*.js'
+  ])
+    .pipe(webpack({
+      resolve: {
+        alias: {
+          vue: 'vue/dist/vue.js'
+        }
+      },
+      module: {
+        loaders: [
+          {
+            test: /\.js$/,
+            exclude: /node_modules/,
+            loader: 'babel-loader',
+            query: {
+              presets: [ 'es2015' ]
+            }
+          },
+          {
+            test: /\.vue$/,
+            loader: 'vue'
+          },
+        ],
+      },
+      output: {
+        filename: 'main.js'
+      }
     }))
-    .pipe(gulp.dest(paths.js.dest));
+    // .pipe(rollup({
+    //   entry: paths.js.client.entry,
+    //   plugins: [
+    //     babel({
+    //       exclude: 'node_modules/**'
+    //     }),
+    //   ]
+    // }))
+    .pipe(gulp.dest(`${__dirname}/dist/js/client/`));
 });
 
 gulp.task(tasks.JS_SERVER, () => {
