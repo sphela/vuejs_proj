@@ -4,6 +4,7 @@ const eslint = require('gulp-eslint');
 const nodemon = require('gulp-nodemon');
 const webpack = require('gulp-webpack');
 const nodeExternals = require('webpack-node-externals');
+const webpackOptions = require('./webpack.config');
 
 const paths = {
   js: {
@@ -60,83 +61,31 @@ gulp.task(tasks.LINT, () => {
 });
 
 gulp.task(tasks.JS_CLIENT, () => {
+  const options = Object.assign({}, webpackOptions);
+  options.entry = './src/js/client/main.js';
+
   return gulp.src([
     './src/vue/**/*.vue',
     './src/js/client/**/*.js',
     './src/js/shared/**/*.js'
   ])
-    .pipe(webpack({
-      resolve: {
-        alias: {
-          vue: 'vue/dist/vue.js'
-        }
-      },
-      module: {
-        loaders: [
-          {
-            test: /\.js$/,
-            exclude: /node_modules/,
-            loader: 'babel-loader',
-            query: {
-              presets: [ 'es2015' ]
-            }
-          },
-          {
-            test: /\.vue$/,
-            loader: 'vue'
-          },
-        ],
-      },
-      output: {
-        filename: 'main.js'
-      }
-    }))
+    .pipe(webpack(options))
     .pipe(gulp.dest(`${__dirname}/dist/js/client/`));
 });
 
 gulp.task(tasks.JS_SERVER, () => {
+  const options = Object.assign({}, webpackOptions);
+
+  options.target = 'node';
+  options.externals = [ nodeExternals() ];
+  options.entry = './src/js/server/init.js';
+
   return gulp.src([
     './src/vue/**/*.vue',
     './src/js/server/**/*.js',
     './src/js/shared/**/*.js'
   ])
-    .pipe(webpack({
-      target: 'node',
-      externals: [ nodeExternals() ],
-      entry: './src/js/server/init.js',
-      resolve: {
-        alias: {
-          vue: 'vue/dist/vue.js'
-        }
-      },
-      module: {
-        loaders: [
-          {
-            test: /\.js$/,
-            exclude: /node_modules/,
-            loader: 'babel-loader',
-            query: {
-              presets: [
-                [ 'es2015', { } ],
-                'stage-3',
-              ],
-              plugins: [
-                'external-helpers',
-                'transform-flow-strip-types'
-              ]
-            }
-          },
-          {
-            exclude: /node_modules/,
-            test: /\.vue$/,
-            loader: 'vue'
-          },
-        ],
-      },
-      output: {
-        filename: 'main.js'
-      }
-    }))
+    .pipe(webpack(options))
     .pipe(gulp.dest(`${__dirname}/dist/js/server/`));
 });
 
