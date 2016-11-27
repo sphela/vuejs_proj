@@ -115,5 +115,4 @@ gulp.task(tasks.NODEMON, () => {
 });
 
 gulp.task(tasks.WATCH, gulp.series(WATCH_TASKS));
-
 gulp.task(tasks.DEFAULT, gulp.parallel(ALL_TASKS));
