@@ -1,15 +1,10 @@
-// @flow
 'use strict';
 
+const App = require('../../vue/app.vue');
 const VueJs = require('vue');
 
-import type { Vue } from './interfaces/vue';
-
-export function createApp (): Vue {
-  return new VueJs({
-    template: '<div id="app">Hello {{ world }}!</div>',
-    data: {
-      world: 'Vue App World'
-    },
+export function createApp () {
+  return new VueJs({ el: '#app',
+    render: h => h(App)
   });
 }

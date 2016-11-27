@@ -4,8 +4,7 @@
 import { createApp } from '../shared/app';
 
 function main () {
-  const app = createApp();
-  app.$mount('main');
+  createApp();
 }
 
 main();

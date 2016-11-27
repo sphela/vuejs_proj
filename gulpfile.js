@@ -1,10 +1,9 @@
 const spawn = require('child_process').spawn;
 const gulp = require('gulp');
-const rollup = require('gulp-rollup');
-const flow = require('rollup-plugin-flow');
 const eslint = require('gulp-eslint');
 const nodemon = require('gulp-nodemon');
 const webpack = require('gulp-webpack');
+const nodeExternals = require('webpack-node-externals');
 
 const paths = {
   js: {
@@ -62,6 +61,7 @@ gulp.task(tasks.LINT, () => {
 
 gulp.task(tasks.JS_CLIENT, () => {
   return gulp.src([
+    './src/vue/**/*.vue',
     './src/js/client/**/*.js',
     './src/js/shared/**/*.js'
   ])
@@ -95,15 +95,49 @@ gulp.task(tasks.JS_CLIENT, () => {
 });
 
 gulp.task(tasks.JS_SERVER, () => {
-  return gulp.src(paths.js.src)
-    .pipe(rollup({
-      sourceMap: true,
-      entry: paths.js.server.entry,
-      plugins: [
-        flow()
-      ],
+  return gulp.src([
+    './src/vue/**/*.vue',
+    './src/js/server/**/*.js',
+    './src/js/shared/**/*.js'
+  ])
+    .pipe(webpack({
+      target: 'node',
+      externals: [ nodeExternals() ],
+      entry: './src/js/server/init.js',
+      resolve: {
+        alias: {
+          vue: 'vue/dist/vue.js'
+        }
+      },
+      module: {
+        loaders: [
+          {
+            test: /\.js$/,
+            exclude: /node_modules/,
+            loader: 'babel-loader',
+            query: {
+              presets: [
+                [ 'es2015', { } ],
+                'stage-3',
+              ],
+              plugins: [
+                'external-helpers',
+                'transform-flow-strip-types'
+              ]
+            }
+          },
+          {
+            exclude: /node_modules/,
+            test: /\.vue$/,
+            loader: 'vue'
+          },
+        ],
+      },
+      output: {
+        filename: 'main.js'
+      }
     }))
-    .pipe(gulp.dest(paths.js.dest));
+    .pipe(gulp.dest(`${__dirname}/dist/js/server/`));
 });
 
 const ALL_TASKS = [
@@ -124,7 +158,7 @@ const WATCH_TASKS = [
 gulp.task(tasks.NODEMON, () => {
   return nodemon({
     script: paths.js.server.target,
-    ext: 'js html',
+    ext: 'js html vue',
     watch: './src/',
     tasks: ALL_TASKS,
     env: { 'NODE_ENV': 'development' },
