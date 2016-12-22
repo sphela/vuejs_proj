@@ -1,7 +1,7 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: sphela
+  name: sphela-nginx
 spec:
   replicas: 2
   template:
@@ -14,18 +14,50 @@ spec:
       - name: docker-registry-secret
       containers:
       - name: sphela-nginx
-        image: gcr.io/sphela-153202/sphela-nginx:latest
+        image: gcr.io/sphela-153202/sphela-nginx:v2
         ports:
         - containerPort: 80
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: sphela
+  name: lb
 spec:
   ports:
     - port: 80
       targetPort: 80
   selector:
-    app: sphela
+    run: sphela-nginx
   type: LoadBalancer
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: sphela-app
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        run: sphela-app
+        app: sphela
+    spec:
+      imagePullSecrets:
+      - name: docker-registry-secret
+      containers:
+      - name: sphela-nginx
+        image: gcr.io/sphela-153202/sphela-app:v2
+        ports:
+        - containerPort: 9100
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: app
+spec:
+  ports:
+    - port: 9100
+      targetPort: 9100
+  selector:
+    run: sphela-app
+
