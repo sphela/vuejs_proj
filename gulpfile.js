@@ -6,17 +6,37 @@ const webpack = require('gulp-webpack');
 const nodeExternals = require('webpack-node-externals');
 const webpackOptions = require('./webpack.config');
 
+const appContainer = 'containers/app/';
+const jsBuildPath = `${appContainer}src/js/`;
+function buildPath (type) {
+  return `${jsBuildPath}${type}/`;
+}
+
 const paths = {
+  watchSrc: './src/',
   js: {
     gulpfile: './gulpfile.js',
     src: './src/js/**/*.js',
-    dest: './dist/js/',
+    dest: jsBuildPath,
     client: {
-      entry: './src/js/client/main.js'
+      src: [
+        './src/vue/**/*.vue',
+        './src/js/client/**/*.js',
+        './src/js/shared/**/*.js'
+      ],
+      entry: './src/js/client/main.js',
+      dest: `${__dirname}/${buildPath('client')}`,
     },
     server: {
-      target: './dist/js/server/main.js',
+      src: [
+        './src/vue/**/*.vue',
+        './src/js/server/**/*.js',
+        './src/js/shared/**/*.js'
+      ],
+      target: `./${buildPath('server')}main.js`,
       entry: './src/js/server/main.js',
+      init: './src/js/server/init.js',
+      dest: `${__dirname}/${buildPath('server')}`,
     },
   },
   bin: {
@@ -37,6 +57,7 @@ const tasks = {
   LINT: 'lint',
   WATCH: 'watch',
   NODEMON: 'nodemon',
+  DEPLOY_STATIC: 'deploy-static',
 };
 
 gulp.task(tasks.FLOW, cb => {
@@ -62,15 +83,11 @@ gulp.task(tasks.LINT, () => {
 
 gulp.task(tasks.JS_CLIENT, () => {
   const options = Object.assign({}, webpackOptions);
-  options.entry = './src/js/client/main.js';
+  options.entry = paths.js.client.entry;
 
-  return gulp.src([
-    './src/vue/**/*.vue',
-    './src/js/client/**/*.js',
-    './src/js/shared/**/*.js'
-  ])
+  return gulp.src(paths.js.client.src)
     .pipe(webpack(options))
-    .pipe(gulp.dest(`${__dirname}/dist/js/client/`));
+    .pipe(gulp.dest(paths.js.client.dest));
 });
 
 gulp.task(tasks.JS_SERVER, () => {
@@ -78,16 +95,28 @@ gulp.task(tasks.JS_SERVER, () => {
 
   options.target = 'node';
   options.externals = [ nodeExternals() ];
-  options.entry = './src/js/server/init.js';
+  options.entry = paths.js.server.init;
 
-  return gulp.src([
-    './src/vue/**/*.vue',
-    './src/js/server/**/*.js',
-    './src/js/shared/**/*.js'
-  ])
+  return gulp.src(paths.js.server.src)
     .pipe(webpack(options))
-    .pipe(gulp.dest(`${__dirname}/dist/js/server/`));
+    .pipe(gulp.dest(paths.js.server.dest));
 });
+
+gulp.task(tasks.DEPLOY_STATIC, cb => {
+
+    const proc = spawn(`./scripts/deploy_static.sh`);
+
+    proc.stdout.on('data', data => {
+      console.log(data.toString('utf8'));
+    });
+
+    proc.stderr.on('data', data => {
+      console.log(data.toString('utf8'));
+    });
+
+    proc.on('close', cb);
+  }
+);
 
 const ALL_TASKS = [
   tasks.LINT,
@@ -108,7 +137,7 @@ gulp.task(tasks.NODEMON, () => {
   return nodemon({
     script: paths.js.server.target,
     ext: 'js html vue',
-    watch: './src/',
+    watch: paths.watchSrc,
     tasks: ALL_TASKS,
     env: { 'NODE_ENV': 'development' },
   });

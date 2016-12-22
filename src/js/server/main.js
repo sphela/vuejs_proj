@@ -12,11 +12,12 @@ import { createApp } from '../shared/app';
 
 import {
   SERVER_PORT,
+  STATIC_ROOT,
 } from '../shared/config';
 
 function main () {
   const middleware = [];
-  middleware.push([ '/static/js', express.static('dist/js/client') ]);
+  middleware.push([ '/static/js', express.static(STATIC_ROOT) ]);
 
   const server = new Server(express(), SERVER_PORT, middleware, vueRendererCreator);
   server.listen();
