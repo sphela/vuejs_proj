@@ -41,3 +41,4 @@ flow-typed
 dist/
 secrets/
 containers/app/src
+deploy/dev-persistent-volume.yaml
