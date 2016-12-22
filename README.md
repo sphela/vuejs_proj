@@ -11,10 +11,10 @@ What currently has been accomplished:
 
 ## Requirements
 
-[yarn](https://github.com/yarnpkg/yarn)
-[minikube](https://github.com/kubernetes/minikube)
-[kubernetes](https://github.com/kubernetes/kubernetes)
-[gcloud](https://cloud.google.com/sdk/gcloud/) for the image registry and prod deployment
+* [yarn](https://github.com/yarnpkg/yarn)
+* [minikube](https://github.com/kubernetes/minikube)
+* [kubernetes](https://github.com/kubernetes/kubernetes)
+* [gcloud](https://cloud.google.com/sdk/gcloud/) for the image registry and prod deployment
 
 As PersistentVolume mapping to host does not yet work on Linux, Linux for dev environment is not yet supported.
 
