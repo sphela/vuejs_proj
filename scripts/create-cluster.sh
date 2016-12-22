@@ -1,5 +1,5 @@
 #!/bin/bash
 
-gcloud container clusters create sphela-prod
+gcloud container clusters create $PROD_CLUSTER_NAME
 
 
