@@ -30,9 +30,9 @@ The first thing to do after git cloning is to generate a local persistent disk y
 
 ### Important environment variables to set:
 
-`PROJECT_ID` The Google Compute Engine project id, i.e. `"sphela-153202"`
-`PROD_PROJECT_CONTEXT` The GCE kubernetes context gcloud creates i.e. `"gke_sphela-153202_us-central1-a_sphela-prod"`
-`PROD_CLUSTER_NAME` The name of the cluster, i.e. `"sphela-prod"`
+* `PROJECT_ID` The Google Compute Engine project id, i.e. `"sphela-153202"`
+* `PROD_PROJECT_CONTEXT` The GCE kubernetes context gcloud creates i.e. `"gke_sphela-153202_us-central1-a_sphela-prod"`
+* `PROD_CLUSTER_NAME` The name of the cluster, i.e. `"sphela-prod"`
 
 ### Google Compute Engine set up
 
