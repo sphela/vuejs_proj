@@ -45,6 +45,7 @@ const paths = {
 };
 
 const cmds = {
+  deployStatic: './scripts/deploy-static.sh',
   flow: paths.bin.flow,
   run: `node ${paths.js.server.target}`,
 };
@@ -104,7 +105,7 @@ gulp.task(tasks.JS_SERVER, () => {
 
 gulp.task(tasks.DEPLOY_STATIC, cb => {
 
-    const proc = spawn(`./scripts/deploy_static.sh`);
+    const proc = spawn(cmds.deployStatic);
 
     proc.stdout.on('data', data => {
       console.log(data.toString('utf8'));

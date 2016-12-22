@@ -60,4 +60,3 @@ spec:
       targetPort: 9100
   selector:
     run: sphela-app
-
