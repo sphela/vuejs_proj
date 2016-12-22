@@ -30,6 +30,29 @@ spec:
     run: sphela-nginx
   type: LoadBalancer
 ---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: src
+spec:
+  accessModes:
+    - ReadWriteOnce
+  capacity:
+    storage: 5Gi
+  hostPath:
+    path: /Users/bjorn/projects/sphela/containers/app/src
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: srclaim
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+---
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
@@ -49,6 +72,13 @@ spec:
         image: gcr.io/sphela-153202/sphela-app:v2
         ports:
         - containerPort: 9100
+        volumeMounts:
+            - name: src
+              mountPath: /www/sphela/app/src/
+      volumes:
+        - name: src
+          persistentVolumeClaim:
+            claimName: srclaim
 ---
 apiVersion: v1
 kind: Service

@@ -1,12 +1,12 @@
 <template>
-    <div id="app">HelloNope {{ world }}!</div>
+    <div id="app">Hello {{ world }}!</div>
 </template>
 
 
 <script>
     module.exports = {
         data: function () {
-            return {world: 'Vue that learning curve App Worldzughzz'};
+            return {world: 'Vue App World yep!'};
         },
         created: function () {
           console.log('foobarmanubar');

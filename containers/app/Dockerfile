@@ -11,7 +11,7 @@ WORKDIR /www/sphela/app/
 
 RUN npm i -g yarn
 
-RUN yarn install
+RUN yarn install --production
 
 CMD node ./src/js/server/main.js
 

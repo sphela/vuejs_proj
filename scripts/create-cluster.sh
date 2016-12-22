@@ -1,5 +1,5 @@
 #!/bin/bash
 
-gcloud container clusters create $PROD_CLUSTER_NAME
+gcloud container clusters create --cluster-version=1.5.1 $PROD_CLUSTER_NAME
 
 

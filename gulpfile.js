@@ -104,20 +104,18 @@ gulp.task(tasks.JS_SERVER, () => {
 });
 
 gulp.task(tasks.DEPLOY_STATIC, cb => {
+  const proc = spawn(cmds.deployStatic);
 
-    const proc = spawn(cmds.deployStatic);
+  proc.stdout.on('data', data => {
+    console.log(data.toString('utf8'));
+  });
 
-    proc.stdout.on('data', data => {
-      console.log(data.toString('utf8'));
-    });
+  proc.stderr.on('data', data => {
+    console.log(data.toString('utf8'));
+  });
 
-    proc.stderr.on('data', data => {
-      console.log(data.toString('utf8'));
-    });
-
-    proc.on('close', cb);
-  }
-);
+  proc.on('close', cb);
+});
 
 const ALL_TASKS = [
   tasks.LINT,
@@ -138,6 +136,7 @@ gulp.task(tasks.NODEMON, () => {
   return nodemon({
     script: paths.js.server.target,
     ext: 'js html vue',
+    exec: './scripts/restart-app.sh',
     watch: paths.watchSrc,
     tasks: ALL_TASKS,
     env: { 'NODE_ENV': 'development' },
