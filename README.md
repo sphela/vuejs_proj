@@ -24,7 +24,7 @@ This project assumes images are hosted in private repositories on GCE.
 
 The first thing to do after git cloning is to generate a local persistent disk yaml for mini:
 
-```
+```sh
 ./scripts/set-dev-pb-path /Users/username/path/to/sphela/root/
 ```
 
@@ -38,20 +38,63 @@ The first thing to do after git cloning is to generate a local persistent disk y
 
 Billing must be enabled. There's an important script for authenticating docker with GCR:
 
-```
+```sh
 ./scripts/docker-secret.sh ./YOUR_GCE_SECRET.json docker-registry-secret
 ```
 
 In this case `YOUR_GCE_SECRET.json` is a .json file you downloaded after creating a secret key json file via the GCE
 dashboard.
 
-To run the local environment:
+### Important local commands
 
-```
+To build the initial environment:
+
+Build the app's code:
+
+```sh
 yarn i
-kubectl config use-context minikube
+yarn gulp
+```
+
+Create the images and push them to GCR
+
+```sh
+./scripts/build-app.sh
+./scripts/build-nginx.sh
+```
+
+To run the local environment in minikube:
+
+```sh
+./scripts/use-dev.sh
 ./scripts/create-deployment-dev.sh
 env STATIC_ROOT='containers/app/src/js/client' yarn gulp watch
 ```
-
 For now `STATIC_ROOT` is required, this is an issue to fix.
+
+See the app in your browser:
+
+```sh
+minikube get lb
+```
+
+This should open up a tab in your default browser with the app running.
+
+
+To setup and deploy to prod:
+
+```sh
+./scripts/use-prod.sh
+./scripts/create-deployment-prod.sh
+```
+
+Otherwise important commands:
+
+```sh
+kubectl get pods # Get the state of the current pods
+kubectl get services # Get the state of services and their external IP
+kubectl proxy # Run a web ui to see important info about your cluster http://127.0.0.1:8000/ui usually.
+minikube logs # If something's not right in the dev environment this probably where to check.
+```
+
+
