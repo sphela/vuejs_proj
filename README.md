@@ -36,7 +36,9 @@ The first thing to do after git cloning is to generate a local persistent disk y
 
 ### Google Compute Engine set up
 
-Billing must be enabled. There's an important script for authenticating minikube's docker with GCR:
+In the GCE dashboard: billing must be enabled. The Google Container Engine API engine must also be enabled.
+
+There's an important script for authenticating minikube's docker with GCR:
 
 ```sh
 minikube start
