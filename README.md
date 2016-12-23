@@ -46,7 +46,7 @@ minikube start
 kubectl get secrets # make sure you see docker-registry-secret here
 ```
 
-If you have trouble pulling images it may be because of problems with the above lines. Make sure minikube is upto
+If you have trouble pulling images it may be because of problems with the above lines. Make sure minikube is up to
 date and that it is being started correctly. If you use vmware you may need more arguments when starting minikube.
 
 In this case `YOUR_GCE_SECRET.json` is a .json file you downloaded after creating a secret key json file via the GCE
