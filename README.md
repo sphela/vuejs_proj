@@ -36,11 +36,16 @@ The first thing to do after git cloning is to generate a local persistent disk y
 
 ### Google Compute Engine set up
 
-Billing must be enabled. There's an important script for authenticating docker with GCR:
+Billing must be enabled. There's an important script for authenticating minikube's docker with GCR:
 
 ```sh
+minikube start
 ./scripts/docker-secret.sh ./YOUR_GCE_SECRET.json docker-registry-secret
+kubectl get secrets # make sure you see docker-registry-secret here
 ```
+
+If you have trouble pulling images it may be because of problems with the above lines. Make sure minikube is upto
+date and that it is being started correctly. If you use vmware you may need more arguments when starting minikube.
 
 In this case `YOUR_GCE_SECRET.json` is a .json file you downloaded after creating a secret key json file via the GCE
 dashboard.
@@ -75,7 +80,7 @@ For now `STATIC_ROOT` is required, this is an issue to fix.
 See the app in your browser:
 
 ```sh
-minikube get lb
+minikube service lb
 ```
 
 This should open up a tab in your default browser with the app running.

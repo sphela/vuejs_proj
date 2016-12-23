@@ -2,6 +2,8 @@
 
 CURRENT_VERSION="v2"
 
+./scripts/deploy-static.sh
+
 cd ./containers/app
 
 # Any kind of argument builds with no cache.
