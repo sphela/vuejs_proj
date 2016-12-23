@@ -102,6 +102,9 @@ kubectl get pods # Get the state of the current pods
 kubectl get services # Get the state of services and their external IP
 kubectl proxy # Run a web ui to see important info about your cluster http://127.0.0.1:8000/ui usually.
 minikube logs # If something's not right in the dev environment this probably where to check.
+kubectl describe po PODNAME
+kubectl describe deployments/services/etc
+kubectl logs PODNAME
 ```
 
 
