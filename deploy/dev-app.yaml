@@ -24,3 +24,14 @@ spec:
         - name: src
           persistentVolumeClaim:
             claimName: srclaim
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: app
+spec:
+  ports:
+    - port: 9100
+      targetPort: 9100
+  selector:
+    run: sphela-app

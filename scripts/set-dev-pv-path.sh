@@ -1,4 +1,4 @@
-#! /bin/bash
+#!/usr/bin/env bash
 
 # Usage ./scripts/set-dev-pb-path /Users/username/path/to/sphela/root/
 

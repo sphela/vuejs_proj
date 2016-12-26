@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 SPATH="$(cd $(dirname "$0") && pwd -P)"
 CONFIG_PATH=${1:-$SPATH/localkube.json}

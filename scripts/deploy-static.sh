@@ -1,4 +1,4 @@
-#! /bin/bash
+#!/usr/bin/env bash
 
 cp ./package.json ./containers/app
 cp ./yarn.lock ./containers/app

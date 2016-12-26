@@ -1,0 +1,24 @@
+# Database persistent volume
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: data
+spec:
+  accessModes:
+    - ReadWriteOnce
+  capacity:
+    storage: 500Gi
+  gcePersistentDisk:
+    pdName: disk-disk
+    fsType: ext4
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: dataclaim
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 500Gi
