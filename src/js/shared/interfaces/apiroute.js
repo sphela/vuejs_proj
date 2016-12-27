@@ -3,12 +3,12 @@
 
 import type { $Request, $Response } from 'express';
 
-export interface Route {
+export interface APIRoute {
 
 }
 
-export type RouteState = {
+export type APIRouteState = {
   req: $Request,
   res: $Response,
-  template: string,
+  result: any,
 };

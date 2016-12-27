@@ -6,14 +6,14 @@ const Rx = require('rxjs');
 import { httpStatus } from './server';
 
 import type { RxObservable, RxObserve } from '../shared/interfaces/rx';
-import type { RouteState } from '../shared/interfaces/route';
+import type { SiteRouteState } from '../shared/interfaces/siteroute';
 import type { Server, ExpressRx } from '../shared/interfaces/server';
 import type { File } from '../shared/interfaces/file';
 import type { Vue } from '../shared/interfaces/vue';
 
 export const APP_TEMPLATE_VAR_PATTERN = '{{{APP}}}';
 
-export default class Route {
+export default class SiteRoute {
 
   _app: Vue;
   _compiledTemplate: string;
@@ -30,8 +30,8 @@ export default class Route {
     return this._compiledTemplate;
   }
 
-  render ({ req, res, renderer }: ExpressRx): RxObservable<RouteState> {
-    return Rx.Observable.create((observe: RxObserve<RouteState>) => {
+  render ({ req, res, renderer }: ExpressRx): RxObservable<SiteRouteState> {
+    return Rx.Observable.create((observe: RxObserve<SiteRouteState>) => {
       renderer.renderToString(this._app, (error, html) => {
         if (error) {
           observe.error(error);
@@ -43,7 +43,7 @@ export default class Route {
     });
   }
 
-  serve (server: Server, path: string, template: File): RxObservable<RouteState> {
+  serve (server: Server, path: string, template: File): RxObservable<SiteRouteState> {
     return template.get()
     .do(template => {
       this.compiledTemplate = template;
@@ -53,7 +53,7 @@ export default class Route {
     .share();
   }
 
-  send ({ req, res, template }: RouteState) {
+  send ({ req, res, template }: SiteRouteState) {
     res.status(httpStatus.OK).send(template);
   }
 }
