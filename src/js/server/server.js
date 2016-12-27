@@ -40,4 +40,12 @@ export default class Server {
     });
   }
 
+  post (path: string): RxObservable<ExpressRx> {
+    return Rx.Observable.create((observe: RxObserve<ExpressRx>) => {
+      this._server.post(path, (req: $Request, res: $Response) => {
+        observe.next({ req, res, renderer: this._renderer });
+      });
+    });
+  }
+
 }

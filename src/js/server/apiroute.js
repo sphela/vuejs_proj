@@ -11,9 +11,16 @@ import type { Server, ExpressRx } from '../shared/interfaces/server';
 
 export default class ApiRoute {
 
+  _count: number;
+
+  constructor () {
+    this._count = 0;
+  }
+
   count ({ req, res }: ExpressRx): RxObservable<APIRouteState> {
     return Rx.Observable.create((observe: RxObserve<APIRouteState>) => {
-      const result = 0;
+      console.log('getting count', this._count);
+      const result = this._count;
       observe.next({ req, res, result });
     });
   }
@@ -21,6 +28,21 @@ export default class ApiRoute {
   getCount (server: Server, path: string): RxObservable<APIRouteState> {
     return server.get(path)
       .mergeMap((msg: ExpressRx) => this.count(msg))
+      .share();
+  }
+
+  setCount ({ req, res }: ExpressRx): RxObservable<APIRouteState> {
+    return Rx.Observable.create((observe: RxObserve<APIRouteState>) => {
+      this._count += 1;
+      const result = this._count;
+      console.log('setting count', this._count);
+      observe.next({ req, res, result });
+    });
+  }
+
+  postCount (server: Server, path: string): RxObservable<APIRouteState> {
+    return server.post(path)
+      .mergeMap((msg: ExpressRx) => this.setCount(msg))
       .share();
   }
 

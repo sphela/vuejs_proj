@@ -27,6 +27,9 @@ function main () {
   apiRoute.getCount(server, '/api/count')
     .subscribe(apiRoute.send);
 
+  apiRoute.postCount(server, '/api/count')
+    .subscribe(apiRoute.send);
+
   const route = new SiteRoute(createApp());
   route.serve(server, '/', new File(`${process.cwd()}/src/html/index.html`, fs))
     .subscribe(route.send);
