@@ -60,6 +60,7 @@ Build the app's code:
 
 ```sh
 yarn i
+yarn flow-typed install
 yarn gulp
 ```
 

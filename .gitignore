@@ -37,7 +37,7 @@ jspm_packages
 .node_repl_history
 
 .idea/workspace.xml
-flow-typed
+flow-typed/npm
 dist/
 secrets/
 containers/app/src
