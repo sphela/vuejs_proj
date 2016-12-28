@@ -1,13 +1,18 @@
 // @flow
 'use strict';
 
-import type { Sequelize } from '../../shared/interfaces/sequelize';
+import type { Sequelize as SequelizeType, Model } from '../../shared/interfaces/sequelize';
+
+const Sequelize = require('sequelize');
 
 export default class Count {
 
-  _db: Sequelize;
+  _count: Model;
 
-  constructor (db: Sequelize) {
-    this._db = db;
+  constructor (db: SequelizeType) {
+    this._count = db.define('count', {
+      data: Sequelize.JSONB
+    });
+    this._count.sync();
   }
 }
