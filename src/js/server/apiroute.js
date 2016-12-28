@@ -21,11 +21,10 @@ export default class ApiRoute {
   }
 
   count ({ req, res }: ExpressRx): RxObservable<APIRouteState> {
-    return Rx.Observable.create((observe: RxObserve<APIRouteState>) => {
-      console.log('getting count', this._count);
-      const result = this._count;
+    return this._countDB.getCount()
+    .mergeMap(result => Rx.Observable.create((observe: RxObserve<APIRouteState>) => {
       observe.next({ req, res, result });
-    });
+    }));
   }
 
   getCount (server: Server, path: string): RxObservable<APIRouteState> {
@@ -35,12 +34,10 @@ export default class ApiRoute {
   }
 
   setCount ({ req, res }: ExpressRx): RxObservable<APIRouteState> {
-    return Rx.Observable.create((observe: RxObserve<APIRouteState>) => {
-      this._count += 1;
-      const result = this._count;
-      console.log('setting count', this._count);
-      observe.next({ req, res, result });
-    });
+    return this._countDB.increment()
+      .mergeMap(result => Rx.Observable.create((observe: RxObserve<APIRouteState>) => {
+        observe.next({ req, res, result });
+      }));
   }
 
   postCount (server: Server, path: string): RxObservable<APIRouteState> {

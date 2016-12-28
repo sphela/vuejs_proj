@@ -6,5 +6,8 @@ export interface Sequelize {
 }
 
 export interface Model {
+  findOne(query: Object): Promise<any>;
+  update(attributes: Object, query: Object): Promise<any>;
+  create(attributes: Object): Promise<any>;
   sync(): void;
 }
