@@ -42,3 +42,5 @@ dist/
 secrets/
 containers/app/src
 deploy/dev-persistent-volume.yaml
+containers/app/package.json
+containers/app/yarn.lock
