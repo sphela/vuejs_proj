@@ -1,5 +1,5 @@
 // @flow
-'use string';
+'use strict';
 
 const Rx = require('rxjs');
 

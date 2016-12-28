@@ -1,20 +1,39 @@
 // @flow
 'use strict';
 
-const express = require('express');
-const fs = require('fs');
-const vueRendererCreator = require('vue-server-renderer');
-
 import Server from './server';
 import File from './file';
 import SiteRoute from './siteroute';
 import APIRoute from './apiroute';
 import { createApp } from '../shared/app';
-
 import {
+  POSTGRES_URI,
+  POSTGRES_PORT,
+  POSTGRES_DB_NAME,
+  POSTGRES_USERNAME,
+  POSTGRES_PASSWORD,
   SERVER_PORT,
   STATIC_ROOT,
 } from '../shared/config';
+import Count from './models/count';
+
+const express = require('express');
+const fs = require('fs');
+const vueRendererCreator = require('vue-server-renderer');
+const Sequelize = require('sequelize');
+
+function initSequelize (): Sequelize {
+  return new Sequelize(
+    POSTGRES_DB_NAME,
+    POSTGRES_USERNAME,
+    POSTGRES_PASSWORD,
+    {
+      dialect: 'postgres',
+      host: POSTGRES_URI,
+      port: POSTGRES_PORT,
+    }
+  );
+}
 
 function main () {
   const middleware = [];
@@ -23,7 +42,9 @@ function main () {
   const server = new Server(express(), SERVER_PORT, middleware, vueRendererCreator);
   server.listen();
 
-  const apiRoute = new APIRoute();
+  const count = new Count(initSequelize());
+
+  const apiRoute = new APIRoute(count);
   apiRoute.getCount(server, '/api/count')
     .subscribe(apiRoute.send);
 

@@ -1,5 +1,5 @@
 // @flow
-'use string';
+'use strict';
 
 const Rx = require('rxjs');
 
@@ -8,12 +8,15 @@ import { httpStatus } from './server';
 import type { RxObservable, RxObserve } from '../shared/interfaces/rx';
 import type { APIRouteState } from '../shared/interfaces/apiroute';
 import type { Server, ExpressRx } from '../shared/interfaces/server';
+import type { Count } from '../shared/interfaces/db';
 
 export default class ApiRoute {
 
   _count: number;
+  _countDB: Count;
 
-  constructor () {
+  constructor (count: Count) {
+    this._countDB = count;
     this._count = 0;
   }
 
