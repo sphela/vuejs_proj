@@ -37,7 +37,9 @@ There needs to be a persistent disk in GCE as well.
 
 These are the rough steps to take to get a proper persistent disk for prod deploy.
 
-* Create a persistent disk with the provided script:
+* Create a persistent disk with a provided script.
+
+This script simply calls `gcloud compute disk create` with options that make sense for the current state of the application.
 
 ```sh
 ./scripts/prod-create-gcepdisk.sh
