@@ -30,7 +30,7 @@ The first thing to do after git cloning is to generate a local persistent disk y
 ./scripts/set-dev-pb-path /Users/username/path/to/sphela/root/
 ```
 
-### In production reate a persistent disk for postgres on GCE
+### In production create a persistent disk for postgres on GCE
 
 There needs to be a persistent disk in GCE as well.
 
