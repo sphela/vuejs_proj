@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-CURRENT_VERSION="3"
+CURRENT_VERSION="4"
 
 ./scripts/deploy-static.sh
 

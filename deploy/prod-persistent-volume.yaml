@@ -7,9 +7,9 @@ spec:
   accessModes:
     - ReadWriteOnce
   capacity:
-    storage: 500Gi
+    storage: 50Gi
   gcePersistentDisk:
-    pdName: disk-disk
+    pdName: sphela-disk
     fsType: ext4
 ---
 apiVersion: v1
@@ -21,4 +21,4 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 500Gi
+      storage: 50Gi

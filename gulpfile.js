@@ -136,7 +136,7 @@ gulp.task(tasks.NODEMON, () => {
   return nodemon({
     script: paths.js.server.target,
     ext: 'js html vue',
-    exec: './scripts/restart-app.sh',
+    exec: './scripts/dev-restart-app.sh',
     watch: paths.watchSrc,
     tasks: ALL_TASKS,
     env: { 'NODE_ENV': 'development' },

@@ -22,11 +22,70 @@ This project assumes images are hosted in private repositories on GCE.
 
 ## Getting Started
 
+### In development reate a persistent disk for your source for minikube
+
 The first thing to do after git cloning is to generate a local persistent disk yaml for mini:
 
 ```sh
 ./scripts/set-dev-pb-path /Users/username/path/to/sphela/root/
 ```
+
+### In production reate a persistent disk for postgres on GCE
+
+There needs to be a persistent disk in GCE as well.
+
+These are the rough steps to take to get a proper persistent disk for prod deploy.
+
+* Create a persistent disk with the provided script:
+
+```sh
+./scripts/prod-create-gcepdisk.sh
+```
+
+* Create an instance to use to format the disk:
+
+```sh
+gcloud compute instances create pg-disk-formatter
+```
+
+* Attach disk to the new instance:
+
+```sh
+gcloud compute instances attach-disk pg-disk-formatter --disk sphela-disk
+```
+
+* ssh into the new instance
+
+```sh
+gcloud compute ssh pg-disk-formatter
+```
+
+* Find the attached disk.
+
+This part is a bit tricky. [Read the documentation](https://cloud.google.com/compute/docs/disks/add-persistent-disk#formatting)
+but it may be incorrect in its advice. What worked for me was running `ls /dev/disk/by-id` before and after attaching the disk.
+The new disk id that appears after attaching is the new disk. There may be a better way to do this.
+
+* Format the disk.
+
+Grabbing the disk id as explained in the previous step run:
+
+```sh
+sudo mkfs.ext4 -F -E lazy_itable_init=0,lazy_journal_init=0,discard /dev/disk/by-id/google-[disk id]
+```
+
+* Detach the disk from the instance
+
+```sh
+gcloud compute instances detach-disk pg-disk-formatter --disk sphela-disk
+```
+
+* Finally delete the instance:
+
+```sh
+gcloud compute instances delete pg-disk-formatter
+```
+
 
 ### Important environment variables to set:
 

@@ -1,0 +1,38 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: db
+spec:
+  ports:
+    - port: 5432
+      targetPort: 5432
+  selector:
+    run: sphela-postgres
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: sphela-postgres
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        run: sphela-postgres
+        app: sphela
+    spec:
+      imagePullSecrets:
+      - name: docker-registry-secret
+      containers:
+      - name: sphela-postgres
+        image: gcr.io/sphela-153202/sphela-postgres:v2
+        ports:
+        - containerPort: 5432
+        volumeMounts:
+            - name: data
+              mountPath: /var/lib/postgresql/data/
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: dataclaim
