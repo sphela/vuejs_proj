@@ -8,6 +8,7 @@ What currently has been accomplished:
 * flowtype interfaces, type checking
 * rxjs 5.0 being used
 * kubernetes local and prod deployment clusters configured
+* Data persistence with postgres
 
 ## Requirements
 
