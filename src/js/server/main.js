@@ -13,7 +13,8 @@ import {
   POSTGRES_USERNAME,
   POSTGRES_PASSWORD,
   SERVER_PORT,
-  STATIC_ROOT,
+  STATIC_JS_ROOT,
+  STATIC_CSS_ROOT,
 } from '../shared/config';
 import Count from './models/count';
 
@@ -37,7 +38,8 @@ function initSequelize (): Sequelize {
 
 function main () {
   const middleware = [];
-  middleware.push([ '/static/js', express.static(STATIC_ROOT) ]);
+  middleware.push([ '/static/css', express.static(STATIC_CSS_ROOT) ]);
+  middleware.push([ '/static/js', express.static(STATIC_JS_ROOT) ]);
 
   const server = new Server(express(), SERVER_PORT, middleware, vueRendererCreator);
   server.listen();

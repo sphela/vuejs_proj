@@ -1,3 +1,5 @@
+'use strict';
+
 const spawn = require('child_process').spawn;
 const gulp = require('gulp');
 const eslint = require('gulp-eslint');
@@ -5,6 +7,8 @@ const nodemon = require('gulp-nodemon');
 const webpack = require('gulp-webpack');
 const nodeExternals = require('webpack-node-externals');
 const webpackOptions = require('./webpack.config');
+const sass = require('gulp-sass');
+const concat = require('gulp-concat');
 
 const appContainer = 'containers/app/';
 const jsBuildPath = `${appContainer}src/js/`;
@@ -14,6 +18,12 @@ function buildPath (type) {
 
 const paths = {
   watchSrc: './src/',
+  css: {
+    src: `./src/sass/**/*.scss`,
+    sassDest: `${__dirname}/${appContainer}/src/sass/`,
+    vueStyles: `${__dirname}/${buildPath('client')}style.css`,
+    dest: `${__dirname}/${appContainer}/src/css/`,
+  },
   js: {
     gulpfile: './gulpfile.js',
     src: './src/js/**/*.js',
@@ -59,6 +69,8 @@ const tasks = {
   WATCH: 'watch',
   NODEMON: 'nodemon',
   DEPLOY_STATIC: 'deploy-static',
+  SASS: 'sass',
+  CONCAT_CSS: 'concat-css',
 };
 
 gulp.task(tasks.FLOW, cb => {
@@ -117,11 +129,28 @@ gulp.task(tasks.DEPLOY_STATIC, cb => {
   proc.on('close', cb);
 });
 
+gulp.task(tasks.SASS, () => {
+  return gulp.src(paths.css.src)
+    .pipe(sass().on('error', sass.logError))
+    .pipe(gulp.dest(paths.css.sassDest));
+});
+
+gulp.task(tasks.CONCAT_CSS, (cb) => {
+  setTimeout(() => {
+    gulp.src([ `${paths.css.sassDest}/main.css`, paths.css.vueStyles ])
+      .pipe(concat('styles.css'))
+      .pipe(gulp.dest(paths.css.dest))
+      .on('end', cb);
+  }, 100);
+});
+
 const ALL_TASKS = [
   tasks.LINT,
   tasks.FLOW,
   tasks.JS_CLIENT,
   tasks.JS_SERVER,
+  tasks.SASS,
+  tasks.CONCAT_CSS,
 ];
 
 const WATCH_TASKS = [
@@ -130,12 +159,14 @@ const WATCH_TASKS = [
   tasks.JS_CLIENT,
   tasks.JS_SERVER,
   tasks.NODEMON,
+  tasks.SASS,
+  tasks.CONCAT_CSS,
 ];
 
 gulp.task(tasks.NODEMON, () => {
   return nodemon({
     script: paths.js.server.target,
-    ext: 'js html vue',
+    ext: 'js html vue scss',
     exec: './scripts/dev-restart-app.sh',
     watch: paths.watchSrc,
     tasks: ALL_TASKS,
@@ -144,4 +175,4 @@ gulp.task(tasks.NODEMON, () => {
 });
 
 gulp.task(tasks.WATCH, gulp.series(WATCH_TASKS));
-gulp.task(tasks.DEFAULT, gulp.parallel(ALL_TASKS));
+gulp.task(tasks.DEFAULT, gulp.series(ALL_TASKS));

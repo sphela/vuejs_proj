@@ -14,7 +14,7 @@ spec:
       - name: docker-registry-secret
       containers:
       - name: sphela-nginx
-        image: gcr.io/sphela-153202/sphela-app:v4
+        image: gcr.io/sphela-153202/sphela-app:v6
         ports:
         - containerPort: 9100
 ---

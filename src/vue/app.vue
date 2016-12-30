@@ -42,8 +42,10 @@
     };
 </script>
 
-<style>
+<style lang="sass">
+    $primary-color: #333;
     #app {
         background: gray;
+        color: $primary-color;
     }
 </style>
