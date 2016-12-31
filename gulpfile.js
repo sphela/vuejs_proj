@@ -58,7 +58,6 @@ const paths = {
 
 const cmds = {
   deployStatic: './scripts/deploy-static.sh',
-  externalHelpers: './node_modules/.bin/babel-external-helpers',
   flow: paths.bin.flow,
   run: `node ${paths.js.server.target}`,
 };
