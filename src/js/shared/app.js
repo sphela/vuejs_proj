@@ -6,7 +6,7 @@ const VueJs = require('vue');
 
 import type { AppContext } from '../shared/interfaces/appcontext';
 
-export function createApp (appContext: ?AppContext) {
+export function createApp (appContext: ?AppContext, store: ?Object) {
   // Global mixin, all components will have access to these properties.
   VueJs.mixin({
     created: function () {
@@ -17,5 +17,5 @@ export function createApp (appContext: ?AppContext) {
   const el = '#app';
   const render = h => h(App);
 
-  return new VueJs({ el, render });
+  return new VueJs({ el, render, store });
 }

@@ -9,31 +9,31 @@
 
 
 <script>
+
+    const { mapActions, mapState } = require('vuex');
+
     module.exports = {
         data: function () {
             return {
                 world: 'Vue App World yep!',
-                count: 0,
             };
         },
+        computed: {
+            ...mapState([
+                'count',
+            ])
+        },
         methods: {
-            increment: function () {
-                this.$http.post('/api/count').then(response => {
-                    console.log('count updated');
-                    this.count = response.body;
-                });
-            },
-            getCount: function () {
-                this.$http.get('/api/count').then(response => {
-                    this.count = response.body;
-                });
-            }
+            ...mapActions([
+                'increment',
+                'getCount',
+            ]),
         },
         created: function () {
           console.log('app created.');
         },
         mounted: function () {
-           console.log('app mounted.', this.count, this.$http, 'http?');
+           console.log('app mounted.');
            this.getCount();
         },
         updated: function () {

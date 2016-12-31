@@ -22,6 +22,8 @@ const express = require('express');
 const fs = require('fs');
 const vueRendererCreator = require('vue-server-renderer');
 const Sequelize = require('sequelize');
+const Vuex = require('vuex');
+const Vue = require('vue');
 
 function initSequelize (): Sequelize {
   return new Sequelize(
@@ -53,7 +55,19 @@ function main () {
   apiRoute.postCount(server, '/api/count')
     .subscribe(apiRoute.send);
 
-  const route = new SiteRoute(createApp());
+  Vue.use(Vuex);
+
+  const store = new Vuex.Store({
+    state: {
+      count: 0
+    },
+    actions: {
+      increment (context) {},
+      getCount (context) {},
+    }
+  });
+
+  const route = new SiteRoute(createApp({}, store));
   route.serve(server, '/', new File(`${process.cwd()}/src/html/index.html`, fs))
     .subscribe(route.send);
 }

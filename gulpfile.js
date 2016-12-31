@@ -9,6 +9,8 @@ const nodeExternals = require('webpack-node-externals');
 const webpackOptions = require('./webpack.config');
 const sass = require('gulp-sass');
 const concat = require('gulp-concat');
+const through = require('through2');
+const babel = require('babel-core');
 
 const appContainer = 'containers/app/';
 const jsBuildPath = `${appContainer}src/js/`;
@@ -56,13 +58,14 @@ const paths = {
 
 const cmds = {
   deployStatic: './scripts/deploy-static.sh',
+  externalHelpers: './node_modules/.bin/babel-external-helpers',
   flow: paths.bin.flow,
   run: `node ${paths.js.server.target}`,
 };
 
 const tasks = {
-  JS_CLIENT: 'js_client',
-  JS_SERVER: 'js_server',
+  JS_CLIENT: 'js-client',
+  JS_SERVER: 'js-server',
   DEFAULT: 'default',
   FLOW: 'flow',
   LINT: 'lint',
@@ -70,7 +73,6 @@ const tasks = {
   NODEMON: 'nodemon',
   DEPLOY_STATIC: 'deploy-static',
   SASS: 'sass',
-  CONCAT_CSS: 'concat-css',
 };
 
 gulp.task(tasks.FLOW, cb => {
@@ -96,10 +98,34 @@ gulp.task(tasks.LINT, () => {
 
 gulp.task(tasks.JS_CLIENT, () => {
   const options = Object.assign({}, webpackOptions);
+  let latest = null;
   options.entry = paths.js.client.entry;
 
   return gulp.src(paths.js.client.src)
     .pipe(webpack(options))
+    // Some gulp-foo to prepend babel helpers to output file.
+    // See: https://babeljs.io/docs/plugins/external-helpers/
+    .pipe(function () {
+      // These need to be actual functions and not arrow functions as gulp binds a this context.
+      return through.obj(function (file, enc, cb) {
+        // `latest` & `file` an instance of Vinyl virtual files. In this case the file contains the js output from webpack.
+        latest = file;
+        cb();
+      }, function (cb) {
+        let contents = through();
+        contents.write(babel.buildExternalHelpers());
+        contents.write('\n');
+        contents.write(latest.contents);
+        contents.end();
+
+        // `file` is an instance of Vinyl, `clone` is a method on Vinyl virtual files.
+        const file = latest.clone({ contents: false });
+        file.contents = contents;
+        file.path = latest.path;
+        this.push(file);
+        cb();
+      });
+    }())
     .pipe(gulp.dest(paths.js.client.dest));
 });
 
@@ -132,16 +158,9 @@ gulp.task(tasks.DEPLOY_STATIC, cb => {
 gulp.task(tasks.SASS, () => {
   return gulp.src(paths.css.src)
     .pipe(sass().on('error', sass.logError))
-    .pipe(gulp.dest(paths.css.sassDest));
-});
-
-gulp.task(tasks.CONCAT_CSS, (cb) => {
-  setTimeout(() => {
-    gulp.src([ `${paths.css.sassDest}/main.css`, paths.css.vueStyles ])
-      .pipe(concat('styles.css'))
-      .pipe(gulp.dest(paths.css.dest))
-      .on('end', cb);
-  }, 100);
+    .pipe(gulp.src([ paths.css.vueStyles ], { passthrough: true }))
+    .pipe(concat('styles.css'))
+    .pipe(gulp.dest(paths.css.dest));
 });
 
 const ALL_TASKS = [
@@ -150,7 +169,6 @@ const ALL_TASKS = [
   tasks.JS_CLIENT,
   tasks.JS_SERVER,
   tasks.SASS,
-  tasks.CONCAT_CSS,
 ];
 
 const WATCH_TASKS = [
@@ -160,7 +178,6 @@ const WATCH_TASKS = [
   tasks.JS_SERVER,
   tasks.NODEMON,
   tasks.SASS,
-  tasks.CONCAT_CSS,
 ];
 
 gulp.task(tasks.NODEMON, () => {
