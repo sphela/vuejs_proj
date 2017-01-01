@@ -1,5 +1,8 @@
 // @flow
 'use strict';
 
-export interface ApplicationContext {
-}
+import type { DB } from './db';
+
+export type ApplicationContext = {
+  +db: DB,
+};

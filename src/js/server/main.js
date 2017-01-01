@@ -5,7 +5,8 @@ import Server from './server';
 import File from './file';
 import SiteRoute from './siteroute';
 import APIRoute from './apiroute';
-import { createApp } from '../shared/app';
+import { appCreator } from '../shared/app';
+import ApplicationContext from '../shared/applicationcontext';
 import {
   POSTGRES_URI,
   POSTGRES_PORT,
@@ -16,7 +17,11 @@ import {
   STATIC_JS_ROOT,
   STATIC_CSS_ROOT,
 } from '../shared/config';
-import Count from './models/count';
+import CountImpl from '../shared/models/count';;
+import DBImpl from '../shared/db';
+
+import type { RxObservable } from '../shared/interfaces/rx';
+import type { Count, DB } from '../shared/interfaces/db';
 
 const express = require('express');
 const fs = require('fs');
@@ -46,9 +51,10 @@ function main () {
   const server = new Server(express(), SERVER_PORT, middleware, vueRendererCreator);
   server.listen();
 
-  const count = new Count(initSequelize());
-
-  const apiRoute = new APIRoute(count);
+  const count: Count = new CountImpl(initSequelize());
+  const db: DB = new DBImpl(count);
+  const applicationContext = new ApplicationContext(db);
+  const apiRoute = new APIRoute(applicationContext);
   apiRoute.getCount(server, '/api/count')
     .subscribe(apiRoute.send);
 
@@ -57,17 +63,23 @@ function main () {
 
   Vue.use(Vuex);
 
-  const store = new Vuex.Store({
-    state: {
-      count: 0
-    },
-    actions: {
-      increment (context) {},
-      getCount (context) {},
-    }
-  });
+  const storeCreator = (): RxObservable<Object> => {
+    return applicationContext.db.count.getCount()
+    .map(currentCount => new Vuex.Store({
+      state: {
+        count: currentCount
+      },
+      actions: {
+        increment (context) {
+          console.log('incrementing');
+        },
+        getCount (context) {},
+      }
+    }));
+  };
 
-  const route = new SiteRoute(createApp({}, store));
+  const route = new SiteRoute(appCreator(storeCreator));
+
   route.serve(server, '/', new File(`${process.cwd()}/src/html/index.html`, fs))
     .subscribe(route.send);
 }

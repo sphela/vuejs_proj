@@ -1,8 +1,8 @@
 // @flow
 'use strict';
 
-import type { Sequelize as SequelizeType, Model } from '../../shared/interfaces/sequelize';
-import type { RxObservable } from '../../shared/interfaces/rx';
+import type { Sequelize as SequelizeType, Model } from '../interfaces/sequelize';
+import type { RxObservable } from '../interfaces/rx';
 
 const Sequelize = require('sequelize');
 const Rx = require('rxjs');

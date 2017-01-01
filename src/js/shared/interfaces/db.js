@@ -7,3 +7,7 @@ export interface Count {
   getCount(): RxObservable<number>;
   increment(): RxObservable<number>;
 }
+
+export type DB = {
+  +count: Count;
+};

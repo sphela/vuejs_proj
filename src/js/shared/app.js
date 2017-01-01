@@ -4,18 +4,15 @@
 const App = require('../../vue/app.vue');
 const VueJs = require('vue');
 
-import type { AppContext } from '../shared/interfaces/appcontext';
+import type { RxObservable } from '../shared/interfaces/rx';
+import type { Vue } from '../shared/interfaces/vue';
 
-export function createApp (appContext: ?AppContext, store: ?Object) {
-  // Global mixin, all components will have access to these properties.
-  VueJs.mixin({
-    created: function () {
-      this.appContext = appContext;
-    }
-  });
+export function appCreator (storeCreator: () => RxObservable<Object>): () => RxObservable<Vue> {
+  return () => {
+    const el = '#app';
+    const render = h => h(App);
 
-  const el = '#app';
-  const render = h => h(App);
-
-  return new VueJs({ el, render, store });
+    return storeCreator()
+    .map(store => new VueJs({ el, render, store }));
+  };
 }
