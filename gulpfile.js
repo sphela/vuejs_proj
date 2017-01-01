@@ -11,6 +11,8 @@ const sass = require('gulp-sass');
 const concat = require('gulp-concat');
 const through = require('through2');
 const babel = require('babel-core');
+const order = require('gulp-order2');
+const path = require('path');
 
 const appContainer = 'containers/app/';
 const jsBuildPath = `${appContainer}src/js/`;
@@ -21,9 +23,10 @@ function buildPath (type) {
 const paths = {
   watchSrc: './src/',
   css: {
+    tachyons: `./node_modules/tachyons/css/tachyons.css`,
     src: `./src/sass/**/*.scss`,
     sassDest: `${__dirname}/${appContainer}/src/sass/`,
-    vueStyles: `${__dirname}/${buildPath('client')}style.css`,
+    vueStyles: `${__dirname}/${buildPath('client')}vue.css`,
     dest: `${__dirname}/${appContainer}/src/css/`,
   },
   js: {
@@ -69,6 +72,7 @@ const tasks = {
   FLOW: 'flow',
   LINT: 'lint',
   WATCH: 'watch',
+  WATCHER: 'watcher',
   NODEMON: 'nodemon',
   DEPLOY_STATIC: 'deploy-static',
   SASS: 'sass',
@@ -108,10 +112,18 @@ gulp.task(tasks.JS_CLIENT, () => {
       // These need to be actual functions and not arrow functions as gulp binds a this context.
       return through.obj(function (file, enc, cb) {
         // `latest` & `file` an instance of Vinyl virtual files. In this case the file contains the js output from webpack.
+
+        if (path.extname(file.path) === '.css') {
+          this.push(file);
+          cb();
+          return;
+        }
+
         latest = file;
         cb();
       }, function (cb) {
         let contents = through();
+
         contents.write(babel.buildExternalHelpers());
         contents.write('\n');
         contents.write(latest.contents);
@@ -157,7 +169,12 @@ gulp.task(tasks.DEPLOY_STATIC, cb => {
 gulp.task(tasks.SASS, () => {
   return gulp.src(paths.css.src)
     .pipe(sass().on('error', sass.logError))
-    .pipe(gulp.src([ paths.css.vueStyles ], { passthrough: true }))
+    .pipe(gulp.src([ paths.css.tachyons, paths.css.vueStyles ], { passthrough: true }))
+    .pipe(order([
+      '*tachyons.css',
+      '*main.css',
+      '*vue.css*',
+    ]))
     .pipe(concat('styles.css'))
     .pipe(gulp.dest(paths.css.dest));
 });
@@ -171,12 +188,8 @@ const ALL_TASKS = [
 ];
 
 const WATCH_TASKS = [
-  tasks.LINT,
-  tasks.FLOW,
-  tasks.JS_CLIENT,
-  tasks.JS_SERVER,
+  tasks.WATCHER,
   tasks.NODEMON,
-  tasks.SASS,
 ];
 
 gulp.task(tasks.NODEMON, () => {
@@ -185,10 +198,11 @@ gulp.task(tasks.NODEMON, () => {
     ext: 'js html vue scss',
     exec: './scripts/dev-restart-app.sh',
     watch: paths.watchSrc,
-    tasks: ALL_TASKS,
+    tasks: [ tasks.WATCHER ],
     env: { 'NODE_ENV': 'development' },
   });
 });
 
+gulp.task(tasks.WATCHER, gulp.series(ALL_TASKS));
 gulp.task(tasks.WATCH, gulp.series(WATCH_TASKS));
 gulp.task(tasks.DEFAULT, gulp.series(ALL_TASKS));

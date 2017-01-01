@@ -19,13 +19,13 @@ module.exports = {
     loaders: {
       css: ExtractTextPlugin.extract('css'),
       scss: ExtractTextPlugin.extract('css!sass'),
+      sass: ExtractTextPlugin.extract('css!sass'),
     }
   },
   output: {
     filename: 'main.js',
-    path: __dirname + '/assets',
   },
   plugins: [
-    new ExtractTextPlugin('style.css')
+    new ExtractTextPlugin('vue.css')
   ],
 };

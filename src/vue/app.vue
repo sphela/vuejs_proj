@@ -1,10 +1,13 @@
 <template>
-    <main id="app">
-        <h1>Hello {{ world }}!</h1>
+    <div class="component ph3 ma4 tc" id="app">
         <p>
-            The current count is: {{ count }}. <button @click="increment">increment</button>
+            The current {{ countTitle }} is:
         </p>
-    </main>
+        <h1>{{ count }}</h1>
+        <div>
+            <button class="f6 grow no-underline br-pill ba ph3 pv2 mb2 dib near-black" @click="increment">increment</button>
+        </div>
+    </div>
 </template>
 
 
@@ -15,7 +18,7 @@
     module.exports = {
         data: function () {
             return {
-                world: 'Vue App World yep!',
+                countTitle: 'count',
             };
         },
         computed: {
@@ -43,9 +46,8 @@
 </script>
 
 <style lang="sass">
-    $primary-color: #333;
+    $primary-color: blue;
     #app {
-        background: gray;
         color: $primary-color;
     }
 </style>

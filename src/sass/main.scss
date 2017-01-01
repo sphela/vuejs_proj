@@ -1,5 +1,10 @@
-$body-bg-color: #EEE;
+@import 'colors';
 
 body {
-  background-color: $body-bg-color;
+  background-color: $white;
+}
+
+button {
+  outline: none;
+  cursor: pointer;
 }
