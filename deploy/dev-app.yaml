@@ -14,7 +14,7 @@ spec:
       - name: docker-registry-secret
       containers:
       - name: sphela-app
-        image: gcr.io/sphela-153202/sphela-app:v9
+        image: gcr.io/sphela-153202/sphela-app:v10
         ports:
         - containerPort: 9100
         volumeMounts:

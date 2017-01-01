@@ -13,6 +13,9 @@ const through = require('through2');
 const babel = require('babel-core');
 const order = require('gulp-order2');
 const path = require('path');
+const cleanCSS = require('gulp-clean-css');
+const uglifyjs = require('gulp-uglify');
+const pump = require('pump');
 
 const appContainer = 'containers/app/';
 const jsBuildPath = `${appContainer}src/js/`;
@@ -76,6 +79,7 @@ const tasks = {
   NODEMON: 'nodemon',
   DEPLOY_STATIC: 'deploy-static',
   SASS: 'sass',
+  MINIFY: 'minify',
 };
 
 gulp.task(tasks.FLOW, cb => {
@@ -176,7 +180,20 @@ gulp.task(tasks.SASS, () => {
       '*vue.css*',
     ]))
     .pipe(concat('styles.css'))
+    .pipe(cleanCSS())
     .pipe(gulp.dest(paths.css.dest));
+});
+
+gulp.task(tasks.MINIFY, function (cb) {
+  console.log('done');
+  cb();
+  pump([
+      gulp.src(`${paths.js.client.dest}*.js`),
+      uglifyjs({}),
+      gulp.dest(`${paths.js.client.dest}min`)
+    ],
+    cb
+  );
 });
 
 const ALL_TASKS = [
