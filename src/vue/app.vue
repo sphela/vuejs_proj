@@ -1,11 +1,11 @@
 <template>
-    <div class="component ph3 ma4 tc" id="app">
+    <div class="component ph3 ma4 tc mt6 georgia" id="app">
         <p>
-            The current {{ countTitle }} is:
+            The current {{ countTitle }} is
         </p>
-        <h1>{{ count }}</h1>
+        <div id="count" class="mb4">{{ count }}</div>
         <div>
-            <button class="f6 grow no-underline br-pill ba ph3 pv2 mb2 dib near-black" @click="increment">increment</button>
+            <a href="#" class="f6 link dim br-pill ba bw1 ph3 pv2 mb2 dib black" @click.prevent="increment">Increment</a>
         </div>
     </div>
 </template>
@@ -46,8 +46,11 @@
 </script>
 
 <style lang="sass">
-    $primary-color: blue;
+    $primary-color: #333;
     #app {
         color: $primary-color;
+    }
+    #count {
+        font-size: 100px;
     }
 </style>
