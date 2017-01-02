@@ -1,4 +1,4 @@
-# sphela
+[![sphela](https://cloud.githubusercontent.com/assets/249641/21595529/b40f8b1e-d0e3-11e6-9eb8-d0fcbd90c275.png)](http://wwww.sphela.com)
 
 An app written in vue.js. Not sure what kind of app yet.
 
