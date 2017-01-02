@@ -6,4 +6,4 @@ kubectl create -f ./deploy/dev-app-service.yaml
 ./scripts/create-shared.sh
 kubectl create -f ./deploy/dev-postgres.yaml
 kubectl create -f ./deploy/dev-expose-postgres.yaml
-kubectl create -f ./deploy/dev-app.yaml
+kubectl create -f ./deploy/dev-app-build.yaml

@@ -44,3 +44,5 @@ containers/app/src
 deploy/dev-persistent-volume.yaml
 containers/app/package.json
 containers/app/yarn.lock
+deploy/dev-app-build.yaml
+deploy/prod-app-build.yaml

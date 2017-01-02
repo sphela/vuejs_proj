@@ -1,21 +1,22 @@
 'use strict';
 
+const babel = require('babel-core');
 const spawn = require('child_process').spawn;
 const gulp = require('gulp');
 const eslint = require('gulp-eslint');
 const nodemon = require('gulp-nodemon');
 const webpack = require('gulp-webpack');
-const nodeExternals = require('webpack-node-externals');
-const webpackOptions = require('./webpack.config');
 const sass = require('gulp-sass');
 const concat = require('gulp-concat');
-const through = require('through2');
-const babel = require('babel-core');
 const order = require('gulp-order2');
-const path = require('path');
 const cleanCSS = require('gulp-clean-css');
 const uglifyjs = require('gulp-uglify');
+const image = require('gulp-image');
+const path = require('path');
 const pump = require('pump');
+const through = require('through2');
+const nodeExternals = require('webpack-node-externals');
+const webpackOptions = require('./webpack.config');
 
 const appContainer = 'containers/app/';
 const jsBuildPath = `${appContainer}src/js/`;
@@ -25,6 +26,10 @@ function buildPath (type) {
 
 const paths = {
   watchSrc: './src/',
+  images: {
+    origin: './images/**/*.png',
+    dest: `${appContainer}src/images`,
+  },
   css: {
     tachyons: `./node_modules/tachyons/css/tachyons.css`,
     src: `./src/sass/**/*.scss`,
@@ -80,6 +85,7 @@ const tasks = {
   DEPLOY_STATIC: 'deploy-static',
   SASS: 'sass',
   MINIFY: 'minify',
+  IMAGES: 'images',
 };
 
 gulp.task(tasks.FLOW, cb => {
@@ -184,24 +190,28 @@ gulp.task(tasks.SASS, () => {
     .pipe(gulp.dest(paths.css.dest));
 });
 
-gulp.task(tasks.MINIFY, function (cb) {
-  console.log('done');
-  cb();
+gulp.task(tasks.MINIFY, cb => {
   pump([
-      gulp.src(`${paths.js.client.dest}*.js`),
-      uglifyjs({}),
-      gulp.dest(`${paths.js.client.dest}min`)
-    ],
-    cb
-  );
+    gulp.src(`${paths.js.client.dest}*.js`),
+    uglifyjs({}),
+    gulp.dest(`${paths.js.client.dest}min`)
+  ], cb);
+});
+
+gulp.task(tasks.IMAGES, () => {
+  return gulp.src([ paths.images.origin ])
+    .pipe(image())
+    .pipe(gulp.dest(paths.images.dest));
 });
 
 const ALL_TASKS = [
   tasks.LINT,
   tasks.FLOW,
   tasks.JS_CLIENT,
+  tasks.MINIFY,
   tasks.JS_SERVER,
   tasks.SASS,
+  tasks.IMAGES,
 ];
 
 const WATCH_TASKS = [

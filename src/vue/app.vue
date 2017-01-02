@@ -1,11 +1,14 @@
 <template>
-    <div class="component ph3 ma4 tc mt6 georgia" id="app">
-        <p>
-            The current {{ countTitle }} is
-        </p>
-        <div id="count" class="mb4">{{ count }}</div>
-        <div>
-            <a href="#" class="f6 link dim br-pill ba bw1 ph3 pv2 mb2 dib black" @click.prevent="increment">Increment</a>
+    <div id="app">
+        <div class="ma3"><a class="logo" href="/"> </a></div>
+        <div class="component ph3 ma4 tc mt6 georgia">
+            <p>
+                The current {{ countTitle }} is
+            </p>
+            <div id="count" class="mb4">{{ count }}</div>
+            <div>
+                <a href="#" class="f6 link dim br-pill ba bw1 ph3 pv2 mb2 dib black" @click.prevent="increment">Increment</a>
+            </div>
         </div>
     </div>
 </template>
@@ -47,6 +50,14 @@
 
 <style lang="sass">
     $primary-color: #333;
+    .logo {
+        display: block;
+        background-image: url('/static/images/sphela.png');
+        background-repeat: no-repeat;
+        background-size: 100px auto;
+        width: 250px;
+        height: 100px;
+    }
     #app {
         color: $primary-color;
     }

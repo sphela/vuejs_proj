@@ -16,6 +16,7 @@ import {
   SERVER_PORT,
   STATIC_JS_ROOT,
   STATIC_CSS_ROOT,
+  STATIC_IMAGE_ROOT,
 } from '../shared/config';
 import CountImpl from '../shared/models/count';;
 import DBImpl from '../shared/db';
@@ -47,6 +48,7 @@ function main () {
   const middleware = [];
   middleware.push([ '/static/css', express.static(STATIC_CSS_ROOT) ]);
   middleware.push([ '/static/js', express.static(STATIC_JS_ROOT) ]);
+  middleware.push([ '/static/images', express.static(STATIC_IMAGE_ROOT) ]);
 
   const server = new Server(express(), SERVER_PORT, middleware, vueRendererCreator);
   server.listen();
