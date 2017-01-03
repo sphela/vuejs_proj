@@ -32,7 +32,7 @@ export default class SiteRoute {
   }
 
   render ({ req, res, renderer }: ExpressRx): RxObservable<SiteRouteState> {
-    return this._appCreator()
+    return this._appCreator(req.originalUrl)
       .mergeMap(app => Rx.Observable.create((observe: RxObserve<SiteRouteState>) => {
         renderer.renderToString(app, (error, html) => {
           if (error) {

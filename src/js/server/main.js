@@ -72,9 +72,7 @@ function main () {
         count: currentCount
       },
       actions: {
-        increment (context) {
-          console.log('incrementing');
-        },
+        increment () {},
         getCount (context) {},
       }
     }));
@@ -82,7 +80,7 @@ function main () {
 
   const route = new SiteRoute(appCreator(storeCreator));
 
-  route.serve(server, '/', new File(`${process.cwd()}/src/html/index.html`, fs))
+  route.serve(server, '*', new File(`${process.cwd()}/src/html/index.html`, fs))
     .subscribe(route.send);
 }
 
