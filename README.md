@@ -142,7 +142,7 @@ APP_VERSION=1 ./scripts/update-version.sh
 
 Also note that we call `update-version.sh` here instead of `./scripts/build-app.sh` The update script will generate yaml
 files to reflect the correct version for the image that gets pushed to GCR. The `update-version.sh` script will itself call
-`build-app.sh`. When making subsequent changes, increment the image version to push a new image to GCR before deploying.
+`build-app.sh`. When making subsequent changes, increment the app version to push a new image to GCR before deploying.
 
 To run the local environment in minikube:
 
