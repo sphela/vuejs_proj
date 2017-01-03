@@ -5,7 +5,7 @@
 
 ## Community
 
-There isn't one yet, but a chat exists on [Gitter](https://gitter.im/sphela/Lobby).
+There isn't one yet, but a chat exists on [Gitter](https://gitter.im/sphela/sphela).
 
 An app written in vue.js. Not sure what kind of app yet.
 
