@@ -133,12 +133,16 @@ yarn flow-typed install
 yarn gulp
 ```
 
-Create the images and push them to GCR
+Create the images and push them to GCR. Note you must set an app version.
 
 ```sh
-./scripts/build-app.sh
+APP_VERSION=1 ./scripts/update-version.sh
 ./scripts/build-nginx.sh
 ```
+
+Also not that we call `update-version.sh` here instead of `./scripts/build-app.sh` The update scri`pt will generate yaml
+files to reflect the correct version for the image that gets pushed to GCR. The `update-version.sh script will itself call
+`build-app.sh`. When making subsequent changes, increment the image version to push a new image to GCR before deploying.
 
 To run the local environment in minikube:
 
@@ -164,6 +168,15 @@ To setup and deploy to prod:
 ./scripts/use-prod.sh
 ./scripts/create-deployment-prod.sh
 ```
+
+After updating an image, call the update script again and use kubectl to push a new image:
+
+```
+APP_VERSION=2 ./scripts/update-version.sh && kubectl set image deployment/sphela-app sphela-app=gcr.io/$PROJECT_ID/sphela-app:v$APP_VERSION
+```
+
+Remember `$PROJECT_ID` must be set for most of the commands to work.
+
 
 Otherwise important commands:
 
