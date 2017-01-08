@@ -1,0 +1,24 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: sphela-letsencrypt
+spec:
+  activeDeadlineSeconds: 5000
+  template:
+    metadata:
+      labels:
+        run: sphela-letsencrypt
+        app: sphela
+    spec:
+      imagePullSecrets:
+      - name: docker-registry-secret
+      containers:
+      - name: letsencrypt
+        image: gcr.io/sphela-153202/sphela-letsencrypt:v8
+        ports:
+        - containerPort: 80
+        imagePullPolicy: Always
+        command: [
+          "/usr/local/bin/encrypt-script.sh"
+        ]
+      restartPolicy: Never

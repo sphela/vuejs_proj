@@ -190,4 +190,19 @@ kubectl describe deployments/services/etc
 kubectl logs PODNAME
 ```
 
+### SSL with let's encrypt & certbot
+
+In order to have SSL on nginx, a cert is needed. This project has a mechanism for creating and renewing
+a let's encrypt certificate and sharing it with each of the nginx instances.
+
+Requirements:
+
+* A nginx job image with certbot installed and kubectl
+* a kubernetes cron job that runs this job once a month (or at least within 90 days)
+* a service that proxies /.well-known used by certbot to the certbot job
+* a script that:
+ * runs certbot
+ * uses kubectl to set new ssl certs as secrets
+* a cronjob on nginx servers that reloads the certs every so often in line with the certbot job, after checking if the config is valid first
+
 

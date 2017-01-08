@@ -6,7 +6,11 @@ metadata:
 spec:
   ports:
     - port: 80
+      name: http
       targetPort: 80
+    - port: 443
+      name: https
+      targetPort: 443
   selector:
     run: sphela-nginx
   type: LoadBalancer
@@ -25,8 +29,19 @@ spec:
     spec:
       imagePullSecrets:
       - name: docker-registry-secret
+      volumes:
+      - name: secret-volume
+        secret:
+          secretName: letsencrypt
       containers:
       - name: sphela-nginx
-        image: gcr.io/sphela-153202/sphela-nginx:v2
+        image: gcr.io/sphela-153202/sphela-nginx:v29
         ports:
         - containerPort: 80
+        volumeMounts:
+        - name: secret-volume
+          readOnly: true
+          mountPath: "/etc/letsencrypt/live/www.sphela.com"
+
+
+
