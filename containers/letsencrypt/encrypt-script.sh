@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 
-
 nginx
-certbot certonly --quiet --webroot --agree-tos --email bjorn@ambientchill.com -d www.sphela.com --webroot-path /usr/share/nginx/html
+certbot certonly --quiet --webroot --agree-tos -d www.sphela.com --webroot-path /usr/share/nginx/html
 if (( $? > 0 ));
 then
     echo "Job failed because of some certbot error"
@@ -10,7 +9,6 @@ then
 fi
 kubectl delete secret letsencrypt
 cd /etc/letsencrypt/live/www.sphela.com/
-openssl dhparam -out dhparam.pem 4096
 
 # Just using a directory with --from-file should work but doesn't, so listing each file.
  kubectl create secret generic letsencrypt \
@@ -19,3 +17,6 @@ openssl dhparam -out dhparam.pem 4096
      --from-file=/etc/letsencrypt/live/www.sphela.com/fullchain.pem \
      --from-file=/etc/letsencrypt/live/www.sphela.com/privkey.pem \
      --from-file=/etc/letsencrypt/live/www.sphela.com/dhparam.pem
+
+# This is temporary to help with debugging certbot for now.
+sleep 4000

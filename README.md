@@ -190,6 +190,10 @@ kubectl describe deployments/services/etc
 kubectl logs PODNAME
 ```
 
+### nginx virtualhost
+
+There will need to be a site that matches the domain sphela is run in in `containers/nginx/conf/sites-enabled`.
+
 ### SSL with let's encrypt & certbot
 
 In order to have SSL on nginx, a cert is needed. This project has a mechanism for creating and renewing
@@ -205,4 +209,11 @@ Requirements:
  * uses kubectl to set new ssl certs as secrets
 * a cronjob on nginx servers that reloads the certs every so often in line with the certbot job, after checking if the config is valid first
 
+Also needed is a dhparams.pem
 
+```sh
+openssl dhparam -out dhparam.pem 4096
+kubectl create secret generic dhparam --from-file=./dhparam.pem
+```
+
+Running `openssl dhparam` will take a very long time.

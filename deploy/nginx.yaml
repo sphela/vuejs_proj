@@ -30,18 +30,24 @@ spec:
       imagePullSecrets:
       - name: docker-registry-secret
       volumes:
-      - name: secret-volume
+      - name: letsencrypt-volume
         secret:
           secretName: letsencrypt
+      - name: dhparam-volume
+        secret:
+          secretName: dhparam
       containers:
       - name: sphela-nginx
-        image: gcr.io/sphela-153202/sphela-nginx:v29
+        image: gcr.io/sphela-153202/sphela-nginx:v38
         ports:
         - containerPort: 80
         volumeMounts:
-        - name: secret-volume
+        - name: letsencrypt-volume
           readOnly: true
-          mountPath: "/etc/letsencrypt/live/www.sphela.com"
+          mountPath: "/etc/letsencrypt/live/certs"
+        - name: dhparam-volume
+          readOnly: true
+          mountPath: "/etc/letsencrypt/live/dhparam"
 
 
 

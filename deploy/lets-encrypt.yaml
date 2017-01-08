@@ -3,7 +3,7 @@ kind: Job
 metadata:
   name: sphela-letsencrypt
 spec:
-  activeDeadlineSeconds: 5000
+  activeDeadlineSeconds: 4000
   template:
     metadata:
       labels:
