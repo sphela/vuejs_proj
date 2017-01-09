@@ -32,7 +32,7 @@
     $primary-color: #333;
     .logo {
         display: inline-block;
-        background-image: url('/static/images/sphela.png');
+        background-image: url('/static/images/sphela-8eefcca4.png');
         background-repeat: no-repeat;
         background-size: 100px auto;
         width: 100px;

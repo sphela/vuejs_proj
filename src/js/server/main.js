@@ -31,6 +31,17 @@ const Sequelize = require('sequelize');
 const Vuex = require('vuex');
 const Vue = require('vue');
 
+function getAssets (assetsPath = '/www/sphela/app/src/js/server/assets.json') {
+  const assets = {};
+  const initialAssets = JSON.parse(fs.readFileSync(assetsPath, 'utf8'));
+  for (const rawPath of Object.keys(initialAssets)) {
+    let asset = initialAssets[rawPath].replace('src/js/client', 'static/js');
+    asset = asset.replace('src', 'static');
+    assets[rawPath] = asset;
+  }
+  return assets;
+}
+
 function initSequelize (): Sequelize {
   return new Sequelize(
     POSTGRES_DB_NAME,
@@ -78,7 +89,7 @@ function main () {
     }));
   };
 
-  const route = new SiteRoute(appCreator(storeCreator));
+  const route = new SiteRoute(getAssets(), appCreator(storeCreator));
 
   route.serve(server, '*', new File(`${process.cwd()}/src/html/index.html`, fs))
     .subscribe(route.send);

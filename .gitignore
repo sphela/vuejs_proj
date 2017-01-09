@@ -47,3 +47,4 @@ containers/app/yarn.lock
 deploy/dev-app-build.yaml
 deploy/prod-app-build.yaml
 letsencrypt
+build

@@ -13,13 +13,17 @@ import type { Vue } from '../shared/interfaces/vue';
 
 export const APP_TEMPLATE_VAR_PATTERN = '{{{APP}}}';
 export const INITIAL_DATA_TEMPLATE_VAR_PATTERN = '{{{INITIAL_DATA}}}';
+export const CSS_SRC_PATH_VAR_PATTERN = '{{{CSS_SRC}}}';
+export const JS_SRC_PATH_VAR_PATTERN = '{{{JS_SRC}}}';
 
 export default class SiteRoute {
 
   _appCreator: () => RxObservable<Vue>;
   _compiledTemplate: string;
+  _assets: Object;
 
-  constructor (appCreator: () => RxObservable<Vue>) {
+  constructor (assets: Object, appCreator: () => RxObservable<Vue>) {
+    this._assets = assets;
     this._appCreator = appCreator;
   }
 
@@ -40,6 +44,8 @@ export default class SiteRoute {
             return;
           }
           const template = this.compiledTemplate
+            .replace(CSS_SRC_PATH_VAR_PATTERN, this._assets['src/css/styles.css'])
+            .replace(JS_SRC_PATH_VAR_PATTERN, this._assets['src/js/client/main.js'])
             .replace(APP_TEMPLATE_VAR_PATTERN, html)
             .replace(INITIAL_DATA_TEMPLATE_VAR_PATTERN, JSON.stringify(app.$store.state));
           observe.next({ req, res, template });

@@ -17,30 +17,32 @@ const pump = require('pump');
 const through = require('through2');
 const nodeExternals = require('webpack-node-externals');
 const webpackOptions = require('./webpack.config');
+const hash = require('gulp-hash');
 
 const appContainer = 'containers/app/';
-const jsBuildPath = `${appContainer}src/js/`;
-function buildPath (type) {
-  return `${jsBuildPath}${type}/`;
-}
+const finalBuildPath = `${appContainer}`;
+const buildDir = 'build/';
+const jsServerBuildPath = `${finalBuildPath}src/js/server/`;
+const jsBuildPath = `${buildDir}src/js/client/`;
 
 const paths = {
+  finalBuildPath,
+  fullBuild: `${buildDir}/**/*`,
   watchSrc: './src/',
   images: {
     origin: './images/**/*.png',
-    dest: `${appContainer}src/images`,
+    dest: `${buildDir}src/images`,
   },
   css: {
     tachyons: `./node_modules/tachyons/css/tachyons.css`,
     src: `./src/sass/**/*.scss`,
-    sassDest: `${__dirname}/${appContainer}/src/sass/`,
-    vueStyles: `${__dirname}/${buildPath('client')}vue.css`,
-    dest: `${__dirname}/${appContainer}/src/css/`,
+    sassDest: `${__dirname}/${buildDir}src/sass/`,
+    vueStyles: `${__dirname}/${jsBuildPath}vue.css`,
+    dest: `${__dirname}/${buildDir}src/css/`,
   },
   js: {
     gulpfile: './gulpfile.js',
     src: './src/js/**/*.js',
-    dest: jsBuildPath,
     client: {
       src: [
         './src/vue/**/*.vue',
@@ -48,7 +50,7 @@ const paths = {
         './src/js/shared/**/*.js'
       ],
       entry: './src/js/client/main.js',
-      dest: `${__dirname}/${buildPath('client')}`,
+      dest: `${__dirname}/${jsBuildPath}`,
     },
     server: {
       src: [
@@ -56,10 +58,10 @@ const paths = {
         './src/js/server/**/*.js',
         './src/js/shared/**/*.js'
       ],
-      target: `./${buildPath('server')}main.js`,
+      target: `./${jsServerBuildPath}main.js`,
       entry: './src/js/server/main.js',
       init: './src/js/server/init.js',
-      dest: `${__dirname}/${buildPath('server')}`,
+      dest: `${__dirname}/${jsServerBuildPath}`,
     },
   },
   bin: {
@@ -86,6 +88,7 @@ const tasks = {
   SASS: 'sass',
   MINIFY: 'minify',
   IMAGES: 'images',
+  HASH: 'hash',
 };
 
 gulp.task(tasks.FLOW, cb => {
@@ -204,6 +207,14 @@ gulp.task(tasks.IMAGES, () => {
     .pipe(gulp.dest(paths.images.dest));
 });
 
+gulp.task(tasks.HASH, () => {
+  return gulp.src(paths.fullBuild)
+    .pipe(hash())
+    .pipe(gulp.dest(paths.finalBuildPath))
+    .pipe(hash.manifest('assets.json'))
+    .pipe(gulp.dest(paths.js.server.dest));
+});
+
 const ALL_TASKS = [
   tasks.LINT,
   tasks.FLOW,
@@ -212,6 +223,7 @@ const ALL_TASKS = [
   tasks.JS_SERVER,
   tasks.SASS,
   tasks.IMAGES,
+  tasks.HASH,
 ];
 
 const WATCH_TASKS = [

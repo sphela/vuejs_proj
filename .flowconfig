@@ -2,3 +2,4 @@
 .*/node_modules/.*
 [options]
 unsafe.enable_getters_and_setters=true
+module.ignore_non_literal_requires=true
