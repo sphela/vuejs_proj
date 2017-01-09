@@ -14,9 +14,6 @@ import {
   POSTGRES_USERNAME,
   POSTGRES_PASSWORD,
   SERVER_PORT,
-  STATIC_JS_ROOT,
-  STATIC_CSS_ROOT,
-  STATIC_IMAGE_ROOT,
 } from '../shared/config';
 import CountImpl from '../shared/models/count';;
 import DBImpl from '../shared/db';
@@ -32,14 +29,7 @@ const Vuex = require('vuex');
 const Vue = require('vue');
 
 function getAssets (assetsPath = '/www/sphela/app/src/js/server/assets.json') {
-  const assets = {};
-  const initialAssets = JSON.parse(fs.readFileSync(assetsPath, 'utf8'));
-  for (const rawPath of Object.keys(initialAssets)) {
-    let asset = initialAssets[rawPath].replace('src/js/client', 'static/js');
-    asset = asset.replace('src', 'static');
-    assets[rawPath] = asset;
-  }
-  return assets;
+  return JSON.parse(fs.readFileSync(assetsPath, 'utf8'));
 }
 
 function initSequelize (): Sequelize {
@@ -57,9 +47,6 @@ function initSequelize (): Sequelize {
 
 function main () {
   const middleware = [];
-  middleware.push([ '/static/css', express.static(STATIC_CSS_ROOT) ]);
-  middleware.push([ '/static/js', express.static(STATIC_JS_ROOT) ]);
-  middleware.push([ '/static/images', express.static(STATIC_IMAGE_ROOT) ]);
 
   const server = new Server(express(), SERVER_PORT, middleware, vueRendererCreator);
   server.listen();

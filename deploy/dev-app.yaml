@@ -23,4 +23,4 @@ spec:
       volumes:
         - name: src
           persistentVolumeClaim:
-            claimName: srclaim
+            claimName: server-src-claim

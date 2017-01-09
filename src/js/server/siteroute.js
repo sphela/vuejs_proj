@@ -43,9 +43,10 @@ export default class SiteRoute {
             observe.error(error);
             return;
           }
+          console.log('assets?', this._assets);
           const template = this.compiledTemplate
-            .replace(CSS_SRC_PATH_VAR_PATTERN, this._assets['src/css/styles.css'])
-            .replace(JS_SRC_PATH_VAR_PATTERN, this._assets['src/js/client/main.js'])
+            .replace(CSS_SRC_PATH_VAR_PATTERN, this._assets['styles.css'])
+            .replace(JS_SRC_PATH_VAR_PATTERN, this._assets['main.js'])
             .replace(APP_TEMPLATE_VAR_PATTERN, html)
             .replace(INITIAL_DATA_TEMPLATE_VAR_PATTERN, JSON.stringify(app.$store.state));
           observe.next({ req, res, template });

@@ -3,25 +3,49 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: src
+  name: server-src
 spec:
   accessModes:
     - ReadWriteOnce
   capacity:
-    storage: 1Gi
+    storage: 300Mi
   hostPath:
     path: LOCAL_PATH/containers/app/src
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: srclaim
+  name: server-src-claim
 spec:
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 1Gi
+      storage: 300Mi
+---
+# nginx persistent volume
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: client-src
+spec:
+  accessModes:
+    - ReadWriteOnce
+  capacity:
+    storage: 200Mi
+  hostPath:
+    path: LOCAL_PATH/containers/nginx/build
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: client-src-claim
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 200Mi
 ---
 # Database persistent volume
 apiVersion: v1

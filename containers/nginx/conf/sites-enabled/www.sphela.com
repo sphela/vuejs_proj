@@ -31,6 +31,32 @@ server {
     add_header X-Frame-Options DENY;
     add_header X-Content-Type-Options nosniff;
 
+    gzip on;
+
+    gzip_http_version 1.1;
+    gzip_vary on;
+    gzip_comp_level 6;
+    gzip_proxied any;
+    gzip_types  text/plain
+                text/html
+                text/css
+                application/json
+                application/x-javascript
+                text/xml
+                application/xml
+                application/xml+rss
+                text/javascript
+                application/javascript
+                text/x-js;
+    gzip_buffers 16 8k;
+
+    location /static {
+        etag on;
+        expires 1y;
+        add_header Cache-Control "public";
+        root /www/sphela/app;
+    }
+
     location / {
         proxy_pass http://app:9100;
         proxy_http_version 1.1;

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-CURRENT_VERSION=38
+CURRENT_VERSION=45
 
 cd ./containers/nginx
 docker build --no-cache -t gcr.io/$PROJECT_ID/sphela-nginx:v$CURRENT_VERSION .

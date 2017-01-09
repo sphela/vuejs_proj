@@ -38,7 +38,7 @@ spec:
           secretName: dhparam
       containers:
       - name: sphela-nginx
-        image: gcr.io/sphela-153202/sphela-nginx:v38
+        image: gcr.io/sphela-153202/sphela-nginx:v45
         ports:
         - containerPort: 80
         volumeMounts:

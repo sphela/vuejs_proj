@@ -21,24 +21,22 @@ const hash = require('gulp-hash');
 
 const appContainer = 'containers/app/';
 const finalBuildPath = `${appContainer}`;
-const buildDir = 'build/';
+const buildDir = 'containers/nginx/build/static/';
 const jsServerBuildPath = `${finalBuildPath}src/js/server/`;
-const jsBuildPath = `${buildDir}src/js/client/`;
+const jsBuildPath = `${buildDir}js/client/`;
 
 const paths = {
   finalBuildPath,
-  fullBuild: `${buildDir}/**/*`,
   watchSrc: './src/',
   images: {
     origin: './images/**/*.png',
-    dest: `${buildDir}src/images`,
+    dest: `${buildDir}images`,
   },
   css: {
     tachyons: `./node_modules/tachyons/css/tachyons.css`,
     src: `./src/sass/**/*.scss`,
-    sassDest: `${__dirname}/${buildDir}src/sass/`,
     vueStyles: `${__dirname}/${jsBuildPath}vue.css`,
-    dest: `${__dirname}/${buildDir}src/css/`,
+    dest: `${__dirname}/${buildDir}css/`,
   },
   js: {
     gulpfile: './gulpfile.js',
@@ -64,6 +62,10 @@ const paths = {
       dest: `${__dirname}/${jsServerBuildPath}`,
     },
   },
+  html: {
+    src: './src/html/**/*.html',
+    dest: `${__dirname}/${finalBuildPath}src/html/`,
+  },
   bin: {
     flow: './node_modules/flow-bin/cli.js',
   }
@@ -88,7 +90,7 @@ const tasks = {
   SASS: 'sass',
   MINIFY: 'minify',
   IMAGES: 'images',
-  HASH: 'hash',
+  MOVE: 'move',
 };
 
 gulp.task(tasks.FLOW, cb => {
@@ -190,29 +192,35 @@ gulp.task(tasks.SASS, () => {
     ]))
     .pipe(concat('styles.css'))
     .pipe(cleanCSS())
-    .pipe(gulp.dest(paths.css.dest));
+    .pipe(hash())
+    .pipe(gulp.dest(paths.css.dest))
+    .pipe(hash.manifest('assets.json'))
+    .pipe(gulp.dest(paths.js.server.dest));
 });
 
 gulp.task(tasks.MINIFY, cb => {
   pump([
     gulp.src(`${paths.js.client.dest}*.js`),
     uglifyjs({}),
-    gulp.dest(`${paths.js.client.dest}min`)
+    hash(),
+    gulp.dest(`${paths.js.client.dest}min`),
+    hash.manifest('assets.json'),
+    gulp.dest(paths.js.server.dest)
   ], cb);
 });
 
 gulp.task(tasks.IMAGES, () => {
   return gulp.src([ paths.images.origin ])
     .pipe(image())
-    .pipe(gulp.dest(paths.images.dest));
-});
-
-gulp.task(tasks.HASH, () => {
-  return gulp.src(paths.fullBuild)
     .pipe(hash())
-    .pipe(gulp.dest(paths.finalBuildPath))
+    .pipe(gulp.dest(paths.images.dest))
     .pipe(hash.manifest('assets.json'))
     .pipe(gulp.dest(paths.js.server.dest));
+});
+
+gulp.task(tasks.MOVE, () => {
+  return gulp.src(paths.html.src)
+    .pipe(gulp.dest(paths.html.dest));
 });
 
 const ALL_TASKS = [
@@ -223,7 +231,6 @@ const ALL_TASKS = [
   tasks.JS_SERVER,
   tasks.SASS,
   tasks.IMAGES,
-  tasks.HASH,
 ];
 
 const WATCH_TASKS = [
