@@ -23,26 +23,3 @@ spec:
     requests:
       storage: 50Gi
 ---
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: letsencrypt
-spec:
-  accessModes:
-    - ReadWriteOnce
-  capacity:
-    storage: 1Gi
-  gcePersistentDisk:
-    pdName: sphela-letsencrypt-disk
-    fsType: ext4
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: letsencryptclaim
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 1Gi
