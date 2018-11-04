@@ -1,11 +1,5 @@
-[![sphela](https://cloud.githubusercontent.com/assets/249641/21595529/b40f8b1e-d0e3-11e6-9eb8-d0fcbd90c275.png)](http://www.sphela.com)
-
-[![Gitter](https://badges.gitter.im/sphela/sphela.svg)](https://gitter.im/sphela/sphela)
 
 
-## Community
-
-There isn't one yet, but a chat exists on [Gitter](https://gitter.im/sphela/sphela).
 
 An app written in vue.js. Not sure what kind of app yet.
 
